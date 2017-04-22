@@ -1,6 +1,8 @@
-var blockWid = 50;
+var maxWidth = 400;
 var width = 5;
 var height = 5;
+var blockWid = maxWidth/width;
+
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 
@@ -29,7 +31,7 @@ function Cell(xcoor, ycoor, wid, a, b) {
 }
 
 function drawGrid(m) {
-    c.width = width * blockWid;
+    c.width = maxWidth;
     c.height = height * blockWid;
     for (var i = 0; i < m.grid.length; i++) {
         for (var j = 0; j < m.grid[0].length; j++) {
@@ -68,11 +70,14 @@ function setPrevObstacles(m, arr){
 var adjust = function() {
     if (this.id === "widthslider") {
         width = this.value;
+        blockWid = maxWidth/width;
     }
     if (this.id === "heightslider") {
         height = this.value;
     }
+    
     var obstacles = returnObs(m);
+    console.log(obstacles);
     m = new Grid();
     setPrevObstacles(m.grid, obstacles);
     drawGrid(m);
@@ -85,8 +90,13 @@ document.getElementById("myCanvas").addEventListener("click", function(e) {
     var x = e.offsetX;
     var y = e.offsetY;
     var temp = m.grid[(x - x%blockWid)/blockWid][(y - y%blockWid)/blockWid];
-    temp.obstacle = true;
-    ctx.fillRect(temp.x, temp.y, temp.width, temp.width);
+    if(temp.obstacle){
+        temp.obstacle = false;
+        ctx.fillStyle = 'white';
+    }
+    else{temp.obstacle = true;
+        ctx.fillStyle = 'black';}
+    ctx.fillRect(temp.x + 1, temp.y + 1, temp.width - 2, temp.width - 2);
 
 });
 

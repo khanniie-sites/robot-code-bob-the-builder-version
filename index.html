@@ -72,19 +72,19 @@
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 160px;
+    min-width: 120px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
 
-.dropdown-content a {
+.dropdown-content p {
     color: black;
-    padding: 12px 16px;
+    padding: 5px 10px;
     text-decoration: none;
     display: block;
 }
 
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content p:hover {background-color: #f1f1f1}
 
 .dropdown:hover .dropdown-content {
     display: block;
@@ -112,16 +112,15 @@
         <div class="dropdown">
             <button class="dropbtn" id="canmove">can move? hover</button>
             <div class="dropdown-content">
-                <a href="#" id="forward">forward</a>
-                <a href="#" id="backward">backward</a>
-                <a href="#" id="leftt">left</a>
-                <a href="#" id="rightt">right</a>
+                <p id="forward">forward</p>
+                <p id="backward">backward</p>
+                <p id="leftt">left</p>
+                <p id="rightt">right</p>
             </div>
         </div>
         <button id="left">rotate left</button>
         <button id="right">rotate right</button>
     </div>
-    <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="grid.js"></script>
 </body>
 

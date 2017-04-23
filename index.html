@@ -1,64 +1,128 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>ROBOTBOTBOT</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
-        <style>
-            #myCanvas{
-                position: absolute;
-                top: 200px;
-                left: 200px;
-                border: 1px solid black;
-            }
-            #sliderbox{
-                position: absolute;
-                top: 20px;
-                left: 200px;
-            }
-            #bot{
-                position: absolute;
-                z-index: 1;
-                width: 70px;
-                height: 70px;
-                top: 40px;
-                left: 100px;
-            }
-            #controlbox{
-                position: absolute;
-                top: 60px;
-                left: 450px;
-                width: 100px;
-            }
-            button{
-                border: 1px solid rgb(100, 100, 100);
-                border-radius: 3px;
-                background-color: #F1F1F1;
-                width: 100px;
-            }
-        </style>
-    </head>
-    <body>
-        <canvas id="myCanvas"></canvas>
-        <img id="bot" src="images/arrow.gif"></div>
-        <div id="sliderbox">
-        <p>click to set/unset obstacles, drag and drop the bot</p>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>ROBOTBOTBOT</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
+    <style>
+    #myCanvas {
+        position: absolute;
+        top: 200px;
+        left: 200px;
+        border: 1px solid black;
+    }
+    
+    #sliderbox {
+        position: absolute;
+        top: 50px;
+        left: 200px;
+        width: 250px;
+        height: 130px;
+        font-size: 80%;
+    }
+    
+    #bot {
+        position: absolute;
+        z-index: 1;
+        width: 70px;
+        height: 70px;
+        top: 90px;
+        left: 380px;
+    }
+    
+    #controlbox {
+        position: absolute;
+        top: 60px;
+        left: 450px;
+        width: 100px;
+        font-size: 60%;
+    }
+    
+    button {
+        border: 1px solid rgb(100, 100, 100);
+        border-radius: 3px;
+        background-color: #F1F1F1;
+        width: 100px;
+        padding: 10px;
+    }
+    
+    input {
+        position: absolute;
+        left: 40px;
+    }
+    
+    #widthslider {
+        top: 80px;
+    }
+    
+    #heightslider {
+        top: 110px;
+    }
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #FFFFFF;
+}
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas"></canvas>
+    <img id="bot" src="images/arrow.gif"></div>
+    <div id="sliderbox">
+        <p>click squares to set/unset obstacles, drag and drop the bot to set it</p>
+        <br>
         <p>width</p>
-        <input type = "range" min="2" value="5" max="10" id="widthslider"/>
+        <input type="range" min="2" value="5" max="10" id="widthslider" />
         <p>height</p>
-        <input type = "range" min="2" max="10" value = "5" id="heightslider"/></div>
-        <div id="controlbox">
-            <button id="move">move forward</button>
-            <button id="canmove">check if can move</button>
-            <button id="left">rotate left</button>
-            <button id="right">rotate right</button>
+        <input type="range" min="2" max="10" value="5" id="heightslider" />
+    </div>
+    <div id="controlbox">
+        <button id="move">move forward</button>
+        <div class="dropdown">
+            <button class="dropbtn" id="canmove">can move? hover</button>
+            <div class="dropdown-content">
+                <a href="#" id="forward">forward</a>
+                <a href="#" id="backward">backward</a>
+                <a href="#" id="leftt">left</a>
+                <a href="#" id="rightt">right</a>
+            </div>
         </div>
+        <button id="left">rotate left</button>
+        <button id="right">rotate right</button>
+    </div>
+    <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="grid.js"></script>
+</body>
 
-        <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
-        <script src="grid.js"></script>
-    </body>
 </html>

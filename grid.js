@@ -20,11 +20,11 @@ function Bot() {
     this.yarrpos;
     this.direction = 0;
 }
-
+//the robot functions
 Bot.prototype.move = function() {
     //polar coordinates inverted kinda ish
     //0- right/ 90- down/ 180 - left/ 270 -up
-    if (this.canmove()) {
+    if (bot.canmove("forward")) {
         if (this.direction == 0) {
             this.xarrpos++;
         }
@@ -37,63 +37,87 @@ Bot.prototype.move = function() {
         if (this.direction == 270) {
             this.yarrpos--;
         }
-        var rect = c.getBoundingClientRect();
-        b.style.left = this.xarrpos * blockWid + rect.left + "px";
-        b.style.top = this.yarrpos * blockWid + rect.top + "px";
-    } else {
-        //alert("oops! you can't do that!");
     }
+
+    var rect = c.getBoundingClientRect();
+    b.style.left = this.xarrpos * blockWid + rect.left + "px";
+    b.style.top = this.yarrpos * blockWid + rect.top + "px";
 }
 Bot.prototype.rotateLeft = function() {
-        this.direction-= 90;
-        if(this.direction < 0){
-            this.direction = 270;
-        }
-        b.style.transform = "rotate(" + this.direction +"deg)";
+    this.direction -= 90;
+    if (this.direction < 0) {
+        this.direction = 270;
+    }
+    b.style.transform = "rotate(" + this.direction + "deg)";
 }
 Bot.prototype.rotateRight = function() {
-         this.direction+=90;
-        if(this.direction > 270){
-            this.direction = 0;
-        }
-        b.style.transform = "rotate(" + this.direction +"deg)";
+    this.direction += 90;
+    if (this.direction > 270) {
+        this.direction = 0;
+    }
+    b.style.transform = "rotate(" + this.direction + "deg)";
 }
-Bot.prototype.canmove = function() {
-        if (this.direction == 0) {
-            if(this.xarrpos + 1 <width && !m.grid[this.xarrpos + 1][this.yarrpos].obstacle){
-                return true;
-            }
+Bot.prototype.canmove = function(direction) {
+    var angle;
+    if (direction === "right") {
+        angle = (this.direction + 90) % 360;
+    }
+    if (direction === "left") {
+        angle = (this.direction + 270) % 360;
+    }
+    if (direction === "forward") {
+        angle = this.direction;
+    }
+    if (direction === "backward") {
+        angle = (this.direction + 180) % 360;
+    }
+    if (angle == 0) {
+        if (this.xarrpos + 1 < width && !m.grid[this.xarrpos + 1][this.yarrpos].obstacle) {
+            return true;
         }
-        else if (this.direction == 180) {
-             if(this.xarrpos - 1 >= 0 && !m.grid[this.xarrpos - 1][this.yarrpos].obstacle){
-                return true;
-            }
+    } else if (angle == 180) {
+        if (this.xarrpos - 1 >= 0 && !m.grid[this.xarrpos - 1][this.yarrpos].obstacle) {
+            return true;
         }
-        else if (this.direction == 90) {
-             if(this.yarrpos + 1 < height && !m.grid[this.xarrpos][this.yarrpos + 1].obstacle){
-                return true;
-            }
+    } else if (angle == 90) {
+        if (this.yarrpos + 1 < height && !m.grid[this.xarrpos][this.yarrpos + 1].obstacle) {
+            return true;
         }
-        else if (this.direction == 270) {
-             if(this.yarrpos -1 >= 0 && !m.grid[this.xarrpos][this.yarrpos -1].obstacle){
-                return true;
-            }
+    } else if (angle == 270) {
+        if (this.yarrpos - 1 >= 0 && !m.grid[this.xarrpos][this.yarrpos - 1].obstacle) {
+            return true;
         }
-        alert("no good!");
-        return false;
+    }
+    alert("no good!");
+    return false;
 }
 
-document.getElementById("move").addEventListener("click", function(){
+document.getElementById("move").addEventListener("click", function() {
     bot.move();
 });
-document.getElementById("left").addEventListener("click", function(){
+document.getElementById("left").addEventListener("click", function() {
     bot.rotateLeft();
 });
-document.getElementById("right").addEventListener("click", function(){
+document.getElementById("right").addEventListener("click", function() {
     bot.rotateRight();
 });
-document.getElementById("canmove").addEventListener("click", function(){
-    if(bot.canmove()){
+document.getElementById("forward").addEventListener("click", function() {
+    if (bot.canmove("forward")) {
+        alert("all good!");
+    }
+});
+document.getElementById("backward").addEventListener("click", function() {
+    if (bot.canmove("backward")) {
+        alert("all good!");
+    }
+});
+document.getElementById("rightt").addEventListener("click", function() {
+    if (bot.canmove("right")) {
+        alert("all good!");
+    }
+});
+document.getElementById("leftt").addEventListener("click", function() {
+    if (bot.canmove("left")) {
         alert("all good!");
     }
 });
@@ -134,8 +158,8 @@ function snap() {
             bot.xarrpos = xinarray;
             bot.yarrpos = yinarray;
         } else {
-            selected.style.left = "100px";
-            selected.style.top = '40px';
+            selected.style.left = "380px";
+            selected.style.top = '90px';
         }
     }
     selected = null;

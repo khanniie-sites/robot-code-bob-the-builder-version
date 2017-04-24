@@ -105,22 +105,22 @@ document.getElementById("right").addEventListener("click", function() {
 });
 document.getElementById("forward").addEventListener("click", function() {
     if (bot.canmove("forward")) {
-        alert("all good!");
+        alert("good to go!");
     }
 });
 document.getElementById("backward").addEventListener("click", function() {
     if (bot.canmove("backward")) {
-        alert("all good!");
+        alert("good to go!");
     }
 });
 document.getElementById("rightt").addEventListener("click", function() {
     if (bot.canmove("right")) {
-        alert("all good!");
+        alert("good to go!");
     }
 });
 document.getElementById("leftt").addEventListener("click", function() {
     if (bot.canmove("left")) {
-        alert("all good!");
+        alert("good to go!");
     }
 });
 

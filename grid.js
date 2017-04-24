@@ -7,6 +7,7 @@ var blockWid = maxWidth / width;
 //canvas
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
+var rect = c.getBoundingClientRect();
 
 
 //BOT!!!!!
@@ -39,7 +40,7 @@ Bot.prototype.move = function() {
         }
     }
 
-    var rect = c.getBoundingClientRect();
+   
     b.style.left = this.xarrpos * blockWid + rect.left + "px";
     b.style.top = this.yarrpos * blockWid + rect.top + "px";
 }
@@ -92,6 +93,7 @@ Bot.prototype.canmove = function(direction) {
     return false;
 }
 
+//buttons to control the bot
 document.getElementById("move").addEventListener("click", function() {
     bot.move();
 });
@@ -175,6 +177,7 @@ document.onmouseup = snap;
 
 
 // Grid class
+//height, width, grid array
 function Grid() {
     this.wid = width;
     this.hei = height;
@@ -189,6 +192,7 @@ function Grid() {
 }
 
 //Cell class
+// width, x coordinate, y coordinate, 
 function Cell(xcoor, ycoor, wid, a, b) {
     this.width = wid;
     this.x = xcoor;
@@ -250,6 +254,14 @@ var adjust = function() {
     m = new Grid();
     setPrevObstacles(m.grid, obstacles);
     drawGrid(m);
+    if(bot.xarrpos !=null){
+        b.style.left = m.grid[bot.xarrpos][bot.yarrpos].x + rect.left + "px";
+        b.style.top = m.grid[bot.xarrpos][bot.yarrpos].y + rect.top + "px";
+    }
+    document.getElementById("widthvalue").innerHTML= width;
+    document.getElementById("heightvalue").innerHTML = height;
+
+
 };
 
 document.getElementById("widthslider").addEventListener("mouseup", adjust);

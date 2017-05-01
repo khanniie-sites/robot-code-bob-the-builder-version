@@ -132,36 +132,36 @@ function snap() {
     selected = null;
 }
 
-//buttons to control the bot
-document.getElementById("move").addEventListener("click", function() {
-    bot.move();
-});
-document.getElementById("left").addEventListener("click", function() {
-    bot.rotateLeft();
-});
-document.getElementById("right").addEventListener("click", function() {
-    bot.rotateRight();
-});
-document.getElementById("forward").addEventListener("click", function() {
-    if (bot.canmove("forward")) {
-        alert("good to go!");
-    }
-});
-document.getElementById("backward").addEventListener("click", function() {
-    if (bot.canmove("backward")) {
-        alert("good to go!");
-    }
-});
-document.getElementById("rightt").addEventListener("click", function() {
-    if (bot.canmove("right")) {
-        alert("good to go!");
-    }
-});
-document.getElementById("leftt").addEventListener("click", function() {
-    if (bot.canmove("left")) {
-        alert("good to go!");
-    }
-});
+// //buttons to control the bot
+// document.getElementById("move").addEventListener("click", function() {
+//     bot.move();
+// });
+// document.getElementById("left").addEventListener("click", function() {
+//     bot.rotateLeft();
+// });
+// document.getElementById("right").addEventListener("click", function() {
+//     bot.rotateRight();
+// });
+// document.getElementById("forward").addEventListener("click", function() {
+//     if (bot.canmove("forward")) {
+//         alert("good to go!");
+//     }
+// });
+// document.getElementById("backward").addEventListener("click", function() {
+//     if (bot.canmove("backward")) {
+//         alert("good to go!");
+//     }
+// });
+// document.getElementById("rightt").addEventListener("click", function() {
+//     if (bot.canmove("right")) {
+//         alert("good to go!");
+//     }
+// });
+// document.getElementById("leftt").addEventListener("click", function() {
+//     if (bot.canmove("left")) {
+//         alert("good to go!");
+//     }
+// });
 
 
 

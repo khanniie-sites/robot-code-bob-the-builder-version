@@ -106,6 +106,63 @@
         top: 110px;
         left: 173px;
     }
+    #blockbox{
+        position: absolute;
+        top: 50px;
+        left: 600px;
+        height: 500px;
+        width: 500px;
+        border: solid black 1px;
+    }
+    #toolbox{
+        position: absolute;
+        left: 310px;
+        margin: 10px;
+        height: 480px;
+        width: 170px;
+        border: solid black 1px;
+        top: 0px;
+    }
+    #dropbox{
+        position: absolute;
+        margin: 10px;
+        height: 480px;
+        width: 300px;
+        top: 0px;
+        border: solid black 1px;
+    }
+    .piece{
+        position: absolute;
+        font-size: .6em;
+        margin: 10px;
+        width: 100px;
+        height: 15px;
+        padding: 3px;
+        background-color: lightgrey;
+        border: 1px solid black;
+        border-radius: 5px;
+        left: 10px;
+        top: 10px;
+    }
+    .move{
+        top: 10px;
+    }
+    .rotateleft{
+        top: 50px;
+    }
+    .rotateright{
+        top: 90px;
+    }
+    .canmove{
+        top: 130px;
+    }
+    #compileact{
+        position: absolute;
+        left: 1000px;
+        top: 10px;
+
+    }
+
     </style>
 </head>
 
@@ -134,7 +191,20 @@
             </div>
         </div>
     </div>
+    <button id="compileact">run blocks</button>
+    <div id="blockbox">
+        <div id="dropbox"></div>
+        <div id="toolbox">
+            <div class="piece move" id="mf1">move forward</div>
+            <div class="piece rotateleft" id="rl1">rotate left</div>
+            <div class="piece rotateright" id="rr1">rotate right</div>
+            <div class="piece canmove" id="cm1">can move? hover</div>
+        </div>
+
+    </div>
     <script src="grid.js"></script>
+    <script src="blocks.js"></script>
+    <script src="gui.js"></script>
 </body>
 
 </html>

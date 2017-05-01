@@ -93,88 +93,6 @@ Bot.prototype.canmove = function(direction) {
     return false;
 }
 
-//buttons to control the bot
-document.getElementById("move").addEventListener("click", function() {
-    bot.move();
-});
-document.getElementById("left").addEventListener("click", function() {
-    bot.rotateLeft();
-});
-document.getElementById("right").addEventListener("click", function() {
-    bot.rotateRight();
-});
-document.getElementById("forward").addEventListener("click", function() {
-    if (bot.canmove("forward")) {
-        alert("good to go!");
-    }
-});
-document.getElementById("backward").addEventListener("click", function() {
-    if (bot.canmove("backward")) {
-        alert("good to go!");
-    }
-});
-document.getElementById("rightt").addEventListener("click", function() {
-    if (bot.canmove("right")) {
-        alert("good to go!");
-    }
-});
-document.getElementById("leftt").addEventListener("click", function() {
-    if (bot.canmove("left")) {
-        alert("good to go!");
-    }
-});
-
-//drag and drop for bot placement
-var selected = null,
-    x_pos = 0,
-    y_pos = 0,
-    x_elem = 0,
-    y_elem = 0;
-
-function drag_init(elem) {
-    selected = elem;
-    x_elem = x_pos - selected.offsetLeft;
-    y_elem = y_pos - selected.offsetTop;
-}
-
-function move_elem(e) {
-    x_pos = document.all ? window.event.clientX : e.pageX;
-    y_pos = document.all ? window.event.clientY : e.pageY;
-    if (selected !== null) {
-        selected.style.left = (x_pos - x_elem) + 'px';
-        selected.style.top = (y_pos - y_elem) + 'px';
-    }
-}
-//fires after mouseup from the bot, gets the bot to snap to grid
-function snap() {
-    if (selected) {
-        var rect = c.getBoundingClientRect();
-        var xoffset = x_pos - rect.left;
-        var xinarray = (xoffset - xoffset % blockWid) / blockWid;
-        var yoffset = y_pos - rect.top;
-        var yinarray = (yoffset - yoffset % blockWid) / blockWid;
-
-        if (!m.grid[xinarray][yinarray].obstacle && x_pos > rect.left && x_pos < rect.right && y_pos > rect.top && y_pos < rect.bottom) {
-            selected.style.left = xinarray * blockWid + rect.left + "px";
-            selected.style.top = yinarray * blockWid + rect.top + "px";
-            bot.xarrpos = xinarray;
-            bot.yarrpos = yinarray;
-        } else {
-            selected.style.left = "380px";
-            selected.style.top = '90px';
-        }
-    }
-    selected = null;
-}
-
-document.getElementById('bot').onmousedown = function() {
-    drag_init(this);
-    return false;
-};
-document.onmousemove = move_elem;
-document.onmouseup = snap;
-
-
 
 // Grid class
 //height, width, grid array
@@ -284,3 +202,6 @@ document.getElementById("myCanvas").addEventListener("click", function(e) {
 var m = new Grid();
 var bot = new Bot();
 drawGrid(m);
+
+
+

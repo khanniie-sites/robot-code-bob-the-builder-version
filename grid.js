@@ -60,6 +60,9 @@ Bot.prototype.rotateRight = function() {
 }
 Bot.prototype.canmove = function(direction) {
     var angle;
+    if(direction === "undef"){
+        alert("choose a direction!");
+    }
     if (direction === "right") {
         angle = (this.direction + 90) % 360;
     }
@@ -178,8 +181,6 @@ var adjust = function() {
     }
     document.getElementById("widthvalue").innerHTML= width;
     document.getElementById("heightvalue").innerHTML = height;
-
-
 };
 
 document.getElementById("widthslider").addEventListener("mouseup", adjust);

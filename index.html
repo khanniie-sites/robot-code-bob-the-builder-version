@@ -85,7 +85,8 @@
     }
     
     .dropdown-content p:hover {
-        background-color: #f1f1f1
+        background-color: #f1f1f1;
+        color: black;
     }
     
     .dropdown:hover .dropdown-content {
@@ -94,6 +95,7 @@
     
     .dropdown:hover .dropbtn {
         background-color: #FFFFFF;
+        color: black;
     }
     #widthvalue{
         position: absolute;
@@ -134,11 +136,10 @@
     .piece{
         position: absolute;
         font-size: .6em;
-        margin: 10px;
-        width: 100px;
-        height: 15px;
-        padding: 3px;
-        background-color: lightgrey;
+        width: 75px;
+        /*height: 20px;*/
+        padding: 10px;
+        background-color: #F1F1F1;
         border: 1px solid black;
         border-radius: 5px;
         left: 10px;
@@ -153,7 +154,7 @@
     .rotateright{
         top: 90px;
     }
-    .canmove{
+    .cango{
         top: 130px;
     }
     #compileact{
@@ -161,6 +162,16 @@
         left: 1000px;
         top: 10px;
 
+    }
+    .dropbtn{
+        color: white;
+        background: black;
+    }
+    .box{
+        background-color: white;
+    }
+    #blockbox{
+        background-color: lightgrey;
     }
 
     </style>
@@ -177,12 +188,16 @@
         <p>height</p>
         <input type="range" min="2" max="10" value="5" id="heightslider" /><div id="heightvalue">5</div>
     </div>
-  <!--   <div id="controlbox">
-        <button id="move">move forward</button>
-        <button id="left">rotate left</button>
-        <button id="right">rotate right</button>
-        <div class="dropdown">
-            <button class="dropbtn" id="canmove">can move? hover</button>
+    <button id="compileact">run blocks</button>
+    <div id="blockbox">
+        <div id="dropbox" class="box"></div>
+        <div id="toolbox" class="box">
+            <div class="piece move" id="mf1">move forward</div>
+            <div class="piece rotateleft" id="rl1">rotate left</div>
+            <div class="piece rotateright" id="rr1">rotate right</div>
+            <div class="piece cango" id="cm1">can move? 
+            <div class="dropdown">
+            <div class="dropbtn" id="cango">hover</button>
             <div class="dropdown-content">
                 <p id="forward">forward</p>
                 <p id="backward">backward</p>
@@ -190,15 +205,7 @@
                 <p id="rightt">right</p>
             </div>
         </div>
-    </div> -->
-    <button id="compileact">run blocks</button>
-    <div id="blockbox">
-        <div id="dropbox"></div>
-        <div id="toolbox">
-            <div class="piece move" id="mf1">move forward</div>
-            <div class="piece rotateleft" id="rl1">rotate left</div>
-            <div class="piece rotateright" id="rr1">rotate right</div>
-            <div class="piece canmove" id="cm1">can move? hover</div>
+            </div>
         </div>
 
     </div>

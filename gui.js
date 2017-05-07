@@ -1,3 +1,4 @@
+var blockhei = 32;
 //dropbox
 var db = document.getElementById("dropbox");
 var dbrect = db.getBoundingClientRect();
@@ -44,16 +45,42 @@ function destroy() {
 //fires after mouseup from the bot, gets the bot to snap to grid
 function snapB() {
     if (selected != null && x_pos > dbrect.left && x_pos < dbrect.right && y_pos > dbrect.top && y_pos < dbrect.bottom) {
+        var index = y_pos - dbrect.top;
+        var res = calculateArrPos(index, blockhei);
+        console.log(res);
+        var shift = false;
         if (test.arr.length < 1) {
-            doit(selected, 0);
+            doit(selected, 0, 0);
+            res[1] = 0;
         } else {
-            var lastpiece = test.arr[test.arr.length - 1];
-            console.log(test.arr, lastpiece);
-            doit(selected, lastpiece.toppos + 32);
+            if(res[1]>test.arr.length){
+                var lastpiece = test.arr[test.arr.length - 1];
+                doit(selected, test.arr.length, lastpiece.toppos + blockhei);
+                res[1] = test.arr.length - 1;
+            }
+            else{
+                shift = true;
+                console.log("else");
+                console.log(res);
+                doit(selected, res[1], res[0]);
+                for(var j=res[1] + 1; j < test.arr.length; j++){
+                test.arr[j].toppos += blockhei; }
+
+            }
 
         }
-        selected.style.top = test.arr[test.arr.length - 1].toppos + "px";
-        selected.style.left = test.arr[test.arr.length - 1].leftpos + "px";
+        if(!shift){
+            console.log("noshift")
+            selected.style.top = test.arr[res[1]].toppos + "px";
+            selected.style.left = test.arr[res[1]].leftpos + "px";
+        }
+        else{
+            for(var j=0; j < test.arr.length; j++){
+                document.getElementById(test.arr[j].divid).style.top = test.arr[j].toppos + "px";
+                document.getElementById(test.arr[j].divid).style.left = test.arr[j].leftpos + "px";
+            }
+        }
+        
 
     } else if(selected !=null){
         selected.parentNode.removeChild(selected);
@@ -62,25 +89,49 @@ function snapB() {
 
 }
 
-function doit(selected, top) {
-    if (hasClass(selected, "move")) {
-        test.arr.push(new Piece(-200, top, new MoveFunct(), selected.id));
+// function doit(selected, top) {
+//     if (hasClass(selected, "move")) {
+//         test.arr.push(new Piece(-200, top, new MoveFunct(), selected.id));
+//     } else if (hasClass(selected, "rotateleft")) {
+//         test.arr.push(new Piece(-200, top, new RotateLeftFunct(), selected.id));
+//     } else if (hasClass(selected, "rotateright")) {
+//         test.arr.push(new Piece(-200, top, new RotateRightFunct(), selected.id));
+//     } else if (hasClass(selected, "cango")) {
+//         if (hasClass(selected, "forward"))
+//             test.arr.push(new Piece(-200, top, new CanMoveFunct("forward"), selected.id));
+//         if (hasClass(selected, "backward"))
+//             test.arr.push(new Piece(-200, top, new CanMoveFunct("backward"), selected.id));
+//         if (hasClass(selected, "right"))
+//             test.arr.push(new Piece(-200, top, new CanMoveFunct("right"), selected.id));
+//         if (hasClass(selected, "left"))
+//             test.arr.push(new Piece(-200, top, new CanMoveFunct("left"), selected.id));
+//         else
+//             test.arr.push(new Piece(-200, top, new CanMoveFunct("undef"), selected.id));
+//     }
+//     if(!hasClass(selected, "used"))
+//     addClass(selected, "used");
+// }
+
+function doit(selected, index, top){
+     if (hasClass(selected, "move")) {
+        test.arr.splice(index, 0, new Piece(-200, top, new MoveFunct(), selected.id));
     } else if (hasClass(selected, "rotateleft")) {
-        test.arr.push(new Piece(-200, top, new RotateLeftFunct(), selected.id));
+        test.arr.splice(index, 0, new Piece(-200, top, new RotateLeftFunct(), selected.id));
     } else if (hasClass(selected, "rotateright")) {
-        test.arr.push(new Piece(-200, top, new RotateRightFunct(), selected.id));
+        test.arr.splice(index, 0, new Piece(-200, top, new RotateRightFunct(), selected.id));
     } else if (hasClass(selected, "cango")) {
         if (hasClass(selected, "forward"))
-            test.arr.push(new Piece(-200, top, new CanMoveFunct("forward"), selected.id));
+            test.arr.splice(index, 0, new Piece(-200, top, new CanMoveFunct("forward"), selected.id));
         if (hasClass(selected, "backward"))
-            test.arr.push(new Piece(-200, top, new CanMoveFunct("backward"), selected.id));
+            test.arr.splice(index, 0, new Piece(-200, top, new CanMoveFunct("backward"), selected.id));
         if (hasClass(selected, "right"))
-            test.arr.push(new Piece(-200, top, new CanMoveFunct("right"), selected.id));
+            test.arr.splice(index, 0, new Piece(-200, top, new CanMoveFunct("right"), selected.id));
         if (hasClass(selected, "left"))
-            test.arr.push(new Piece(-200, top, new CanMoveFunct("left"), selected.id));
+            test.arr.splice(index, 0, new Piece(-200, top, new CanMoveFunct("left"), selected.id));
         else
-            test.arr.push(new Piece(-200, top, new CanMoveFunct("undef"), selected.id));
+            test.arr.splice(index, 0, new Piece(-200, top, new CanMoveFunct("undef"), selected.id));
     }
+    if(!hasClass(selected, "used"))
     addClass(selected, "used");
 }
 
@@ -109,8 +160,7 @@ var selected = null,
 
 function drag_init(elem) {
     if (hasClass(elem, "used")) {
-        console.log("used!");
-        console.log(test.arr.splice(searchBlockArrayForDiv(test.arr, elem.id), 1));
+        test.arr.splice(searchBlockArrayForDiv(test.arr, elem.id), 1);
     }
     if (elem != b && !hasClass(elem, "used")) {
         duplicate(elem.id);
@@ -183,7 +233,6 @@ function addClass(el, someClass) {
 }
 
 function canMoveAddDirection(el, someClass) {
-    console.log("adding direction");
     var temp = el.parentNode.parentNode.parentNode.parentNode;
     if (hasClass(temp, "used")) {
         var p = test.arr[searchBlockArrayForDiv(test.arr, temp.id)];
@@ -196,11 +245,16 @@ function canMoveAddDirection(el, someClass) {
 function searchBlockArrayForDiv(arr, divname) {
     for (var i = 0; i < arr.length; i++) {
         if (arr[i].divid === divname) {
-            console.log(i);
             return i;
         }
     }
     return -1;
+}
+
+function calculateArrPos(offset, blockhei){
+    var top = offset - offset%blockhei;
+    console.log(top, top/blockhei);
+    return [top, top/blockhei];
 }
 
 document.getElementById('bot').onmousedown = function() {

@@ -36,7 +36,9 @@ var act = function(p) {
         bot.rotateRight();
     }
     if (p.funct.type === "canmovefunct") {
-        bot.canmove(p.funct.direction);
+        if(bot.canmove(p.funct.direction))
+            alert("good to go!");
+        
     }
 }
 

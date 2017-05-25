@@ -94,7 +94,7 @@ var act = function(tid, p) {
     }
     if (p.funct.type ==="repeatfunct"){
         loop = true;
-        times = document.getElementById(p.funct.inputid).value;
+        times = parseInt(document.getElementById(p.funct.inputid).value, 10);
         if(!(times>0)){
             alert("please enter a value into the loop!");
             endscript = true;
@@ -116,15 +116,17 @@ var act = function(tid, p) {
 }
 
 function compileActions() {
+    times = 500;
+    timecounter = 1;
     endscript = false;
     counter.count = 0;
     startpoint = 0;
-    console.log(test.arr);
+    //console.log(test.arr);
     endpoint = test.arr.length - 1;
     var tid = setTimeout(mycode, 300);
 
     function mycode() {
-        console.log(counter.count);
+        //console.log(counter.count);
         if (counter.count > endpoint || endscript) {
             clearTimeout(tid);
         }
@@ -133,6 +135,7 @@ function compileActions() {
        		counter.count++;
            
             if(timecounter >= times){
+                times = 500;
                 loop = false;
                 endpoint = test.arr.length - 1;
             }

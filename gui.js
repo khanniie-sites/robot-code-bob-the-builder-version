@@ -1,230 +1,15 @@
-var blockhei = 32;
-//dropbox
-var db = document.getElementById("dropbox");
-var dbrect = db.getBoundingClientRect();
+document.oncontextmenu = document.body.oncontextmenu = function() {return false;}
+
+//globalvar -----------------------------------------------------------
+
+var blockhei = 23;
+var isOverTextBox = false;
+
+//helper classes---------------------------------------------------------------
 
 function hasClass(element, cls) {
     return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
 }
-
-var classname = document.getElementsByClassName("piece");
-for (var i = 0; i < classname.length; i++) {
-
-    classname[i].addEventListener("mousedown", function() {
-        drag_init(this);
-        return false;
-    })
-}
-
-document.onmousemove = move_elem;
-
-var selected = null,
-    x_pos = 0,
-    y_pos = 0,
-    x_elem = 0,
-    y_elem = 0;
-
-function move_elem(e) {
-    x_pos = document.all ? window.event.clientX : e.pageX;
-    y_pos = document.all ? window.event.clientY : e.pageY;
-    if (selected !== null) {
-        selected.style.left = (x_pos - x_elem) + 'px';
-        selected.style.top = (y_pos - y_elem) + 'px';
-    }
-}
-
-function destroy() {
-    if (selected === b) {
-        snap();
-    } else {
-        snapB();
-    }
-    selected = null;
-}
-
-//fires after mouseup from the bot, gets the bot to snap to grid
-function snapB() {
-    if (selected != null && x_pos > dbrect.left && x_pos < dbrect.right && y_pos > dbrect.top && y_pos < dbrect.bottom) {
-        var index = y_pos - dbrect.top;
-        var res = calculateArrPos(index, blockhei);
-        console.log(res);
-        var shift = false;
-        if (test.arr.length < 1) {
-            doit(selected, 0, 0);
-            res[1] = 0;
-        } else {
-            if(res[1]>test.arr.length){
-                var lastpiece = test.arr[test.arr.length - 1];
-                doit(selected, test.arr.length, lastpiece.toppos + blockhei);
-                res[1] = test.arr.length - 1;
-            }
-            else{
-                shift = true;
-                console.log("else");
-                console.log(res);
-                doit(selected, res[1], res[0]);
-                for(var j=res[1] + 1; j < test.arr.length; j++){
-                test.arr[j].toppos += blockhei; }
-
-            }
-
-        }
-        if(!shift){
-            console.log("noshift")
-            selected.style.top = test.arr[res[1]].toppos + "px";
-            selected.style.left = test.arr[res[1]].leftpos + "px";
-        }
-        else{
-            for(var j=0; j < test.arr.length; j++){
-                document.getElementById(test.arr[j].divid).style.top = test.arr[j].toppos + "px";
-                document.getElementById(test.arr[j].divid).style.left = test.arr[j].leftpos + "px";
-            }
-        }
-        
-
-    } else if(selected !=null){
-        selected.parentNode.removeChild(selected);
-    }
-    selected = null;
-
-}
-
-// function doit(selected, top) {
-//     if (hasClass(selected, "move")) {
-//         test.arr.push(new Piece(-200, top, new MoveFunct(), selected.id));
-//     } else if (hasClass(selected, "rotateleft")) {
-//         test.arr.push(new Piece(-200, top, new RotateLeftFunct(), selected.id));
-//     } else if (hasClass(selected, "rotateright")) {
-//         test.arr.push(new Piece(-200, top, new RotateRightFunct(), selected.id));
-//     } else if (hasClass(selected, "cango")) {
-//         if (hasClass(selected, "forward"))
-//             test.arr.push(new Piece(-200, top, new CanMoveFunct("forward"), selected.id));
-//         if (hasClass(selected, "backward"))
-//             test.arr.push(new Piece(-200, top, new CanMoveFunct("backward"), selected.id));
-//         if (hasClass(selected, "right"))
-//             test.arr.push(new Piece(-200, top, new CanMoveFunct("right"), selected.id));
-//         if (hasClass(selected, "left"))
-//             test.arr.push(new Piece(-200, top, new CanMoveFunct("left"), selected.id));
-//         else
-//             test.arr.push(new Piece(-200, top, new CanMoveFunct("undef"), selected.id));
-//     }
-//     if(!hasClass(selected, "used"))
-//     addClass(selected, "used");
-// }
-
-function doit(selected, index, top){
-     if (hasClass(selected, "move")) {
-        test.arr.splice(index, 0, new Piece(-200, top, new MoveFunct(), selected.id));
-    } else if (hasClass(selected, "rotateleft")) {
-        test.arr.splice(index, 0, new Piece(-200, top, new RotateLeftFunct(), selected.id));
-    } else if (hasClass(selected, "rotateright")) {
-        test.arr.splice(index, 0, new Piece(-200, top, new RotateRightFunct(), selected.id));
-    } else if (hasClass(selected, "cango")) {
-        if (hasClass(selected, "forward"))
-            test.arr.splice(index, 0, new Piece(-200, top, new CanMoveFunct("forward"), selected.id));
-        if (hasClass(selected, "backward"))
-            test.arr.splice(index, 0, new Piece(-200, top, new CanMoveFunct("backward"), selected.id));
-        if (hasClass(selected, "right"))
-            test.arr.splice(index, 0, new Piece(-200, top, new CanMoveFunct("right"), selected.id));
-        if (hasClass(selected, "left"))
-            test.arr.splice(index, 0, new Piece(-200, top, new CanMoveFunct("left"), selected.id));
-        else
-            test.arr.splice(index, 0, new Piece(-200, top, new CanMoveFunct("undef"), selected.id));
-    }
-    if(!hasClass(selected, "used"))
-    addClass(selected, "used");
-}
-
-function duplicate(theid) {
-    var original = document.getElementById(theid);
-    var clone = original.cloneNode(true); // "deep" clone
-    var first = original.id.substring(0, 2);
-    var second = original.id.substring(2);
-    clone.id = first + ++second;
-    // or clone.id = ""; if the divs don't need an ID
-    original.parentNode.appendChild(clone);
-    original = document.getElementById(clone.id);
-    original.addEventListener("mousedown", function() {
-        drag_init(this);
-        return false;
-    })
-
-}
-
-//drag and drop for bot placement
-var selected = null,
-    x_pos = 0,
-    y_pos = 0,
-    x_elem = 0,
-    y_elem = 0;
-
-function drag_init(elem) {
-    if (hasClass(elem, "used")) {
-        test.arr.splice(searchBlockArrayForDiv(test.arr, elem.id), 1);
-    }
-    if (elem != b && !hasClass(elem, "used")) {
-        duplicate(elem.id);
-    }
-    selected = elem;
-    x_elem = x_pos - selected.offsetLeft;
-    y_elem = y_pos - selected.offsetTop;
-}
-
-function move_elem(e) {
-    x_pos = document.all ? window.event.clientX : e.pageX;
-    y_pos = document.all ? window.event.clientY : e.pageY;
-    if (selected !== null) {
-        selected.style.left = (x_pos - x_elem) + 'px';
-        selected.style.top = (y_pos - y_elem) + 'px';
-    }
-}
-//fires after mouseup from the bot, gets the bot to snap to grid
-function snap() {
-    if (selected) {
-        var rect = c.getBoundingClientRect();
-        var xoffset = x_pos - rect.left;
-        var xinarray = (xoffset - xoffset % blockWid) / blockWid;
-        var yoffset = y_pos - rect.top;
-        var yinarray = (yoffset - yoffset % blockWid) / blockWid;
-
-        if (!m.grid[xinarray][yinarray].obstacle && x_pos > rect.left && x_pos < rect.right && y_pos > rect.top && y_pos < rect.bottom) {
-            selected.style.left = xinarray * blockWid + rect.left + "px";
-            selected.style.top = yinarray * blockWid + rect.top + "px";
-            bot.xarrpos = xinarray;
-            bot.yarrpos = yinarray;
-        } else {
-            selected.style.left = "380px";
-            selected.style.top = '90px';
-        }
-    }
-    selected = null;
-}
-
-// //buttons to control the bot
-// document.getElementById("move").addEventListener("click", function() {
-//     bot.move();
-// });
-// document.getElementById("left").addEventListener("click", function() {
-//     bot.rotateLeft();
-// });
-// document.getElementById("right").addEventListener("click", function() {
-//     bot.rotateRight();
-// });
-document.getElementById("forward").addEventListener("click", function() {
-    canMoveAddDirection(this, "forward");
-
-});
-document.getElementById("backward").addEventListener("click", function() {
-    canMoveAddDirection(this, "backward");
-
-});
-document.getElementById("rightt").addEventListener("click", function() {
-    canMoveAddDirection(this, "right");
-
-});
-document.getElementById("leftt").addEventListener("click", function() {
-    canMoveAddDirection(this, "left");
-});
 
 function addClass(el, someClass) {
     if (el) {
@@ -232,15 +17,6 @@ function addClass(el, someClass) {
     }
 }
 
-function canMoveAddDirection(el, someClass) {
-    var temp = el.parentNode.parentNode.parentNode.parentNode;
-    if (hasClass(temp, "used")) {
-        var p = test.arr[searchBlockArrayForDiv(test.arr, temp.id)];
-        p.funct.direction = someClass;
-    }
-    addClass(temp, someClass);
-    el.parentNode.parentNode.innerHTML = someClass + "";
-}
 //returns index
 function searchBlockArrayForDiv(arr, divname) {
     for (var i = 0; i < arr.length; i++) {
@@ -251,20 +27,394 @@ function searchBlockArrayForDiv(arr, divname) {
     return -1;
 }
 
-function calculateArrPos(offset, blockhei){
-    var top = offset - offset%blockhei;
-    console.log(top, top/blockhei);
-    return [top, top/blockhei];
+function searchBrefForDiv(arr, divname){
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i] === divname) {
+            return i;
+        }
+    }
+    return -1;
 }
+
+function calculateArrPos(offset, blockhei) {
+    var top = offset - offset % blockhei;
+    var pos = 0;
+    var arrpos = top/blockhei;
+    if(arrpos > test.arr.length){
+        arrpos = test.arr.length;
+        return [top, arrpos];
+    }
+    for(var i = 1; i< arrpos; i++){
+        if(!test.arr[i].inloop && test.arr[i -1].inloop){
+            arrpos--;
+        }
+    }
+    return [top, arrpos];
+    //return [inlooparrpos, arrpos];
+}
+
+//drag and drop---------------------------------------------------------------
+
+function DragPart(elem, height, x_elem, y_elem, piece) {
+    this.selected = elem;
+    this.x_elem = x_elem;
+    this.y_elem = y_elem;
+    this.height = height;
+    this.bref = [];
+    this.pi = piece;
+}
+
+//pos of mouse
+var x_pos = 0,
+    y_pos = 0;
+//array of all DragPart elements being dragged (just one obj if one block, if loop or if then multiple)    
+var dragbit = [];
+
+//fires when you pick up piece
+function drag_init(elem) {
+    if (isOverTextBox) {
+        return false;
+    }
+    var trect = elem.getBoundingClientRect();
+    var height = trect.bottom - trect.top;
+    //putting pieces into dragbit arrays
+
+    //if the piece is within the dropbox
+    if (hasClass(elem, "used")) {
+        var element = test.arr[searchBlockArrayForDiv(test.arr, elem.id)];
+        var numremove = 1;
+
+        //add first element
+        var temp = new DragPart(elem, height, x_pos - elem.offsetLeft, y_pos - elem.offsetTop, element);
+        dragbit.splice(0, 0, temp);
+        dragbit[0].bref = element.bref;
+
+        //if loop, get stuff inside loop too
+        if (hasClass(elem, "outer")) {
+            numremove = element.bref.length + 1;
+            for (var i = 0; i < element.bref.length; i++) {
+                var tempinarr = test.arr[searchBlockArrayForDiv(test.arr, element.bref[i])];
+                var temp = new DragPart(document.getElementById(element.bref[i]), tempinarr.height, x_pos - document.getElementById(element.bref[i]).offsetLeft, y_pos - document.getElementById(element.bref[i]).offsetTop, tempinarr);
+                dragbit.push(temp);
+                dragbit[i + 1].bref = tempinarr.bref;
+            }
+        }
+
+        //if the element was in a loop, remove its id from the loop's storage and change the height of the loop
+        if (element.inloop) {
+            //get the loop element that the block was assigned to
+            var loopele = test.arr[searchBlockArrayForDiv(test.arr, element.loopid)];
+            //change height of that element, both in css and in the array object
+            document.getElementById(element.loopid).style.height = loopele.height - element.height + "px";
+            loopele.height -= element.height;
+            //remove from loop's block ref storage
+            loopele.bref.splice(searchBrefForDiv(loopele.bref, elem.id), 1);
+        }
+        //shifts all elements below up
+        for (var j = searchBlockArrayForDiv(test.arr, elem.id) + 1; j < test.arr.length; j++) {
+            test.arr[j].toppos -= element.height;
+        }
+
+        //remove all blocks from main block array
+        test.arr.splice(searchBlockArrayForDiv(test.arr, elem.id), numremove);
+
+        //reflect position changes on screen
+        for (var j = 0; j < test.arr.length; j++) {
+            document.getElementById(test.arr[j].divid).style.top = test.arr[j].toppos + "px";
+            document.getElementById(test.arr[j].divid).style.left = test.arr[j].leftpos + "px";
+        }
+    }
+    //if unused, grabbed from toolbox
+    else {
+        //if it's not the bot, aka if it's a block, duplicate it
+        if (elem != b) {
+            duplicate(elem.id);
+        }
+        //console.log(height);
+        var temp = new DragPart(elem, height, x_pos - elem.offsetLeft, y_pos - elem.offsetTop, null);
+        dragbit.splice(0, 0, temp);
+    }
+}
+
+function move_elem(e) {
+    x_pos = document.all ? window.event.clientX : e.pageX;
+    y_pos = document.all ? window.event.clientY : e.pageY;
+    for (var i = 0; i < dragbit.length; i++) {
+        dragbit[i].selected.style.left = (x_pos - dragbit[i].x_elem) + 'px';
+        dragbit[i].selected.style.top = (y_pos - dragbit[i].y_elem) + 'px';
+    }
+}
+
+function destroy() {
+    if (dragbit.length > 0) {
+        if (dragbit[0].selected === b) {
+            snap();
+        } else {
+            snapB();
+        }
+    }
+    dragbit = [];
+}
+
+//fires after mouseup from the bot, gets the bot to snap to grid
+function snapB() {
+    //grab dimensions of the box where they'll be dropped in
+    var db = document.getElementById("dropbox");
+    var dbrect = db.getBoundingClientRect();
+    //for later use
+    var inloop = false;
+    //if within the dimensions of the dropbox (with scroll factored in)
+    if (dragbit.length > 0 && x_pos > dbrect.left + window.scrollX && x_pos < dbrect.right + window.scrollX && y_pos > dbrect.top + window.scrollY && y_pos < dbrect.bottom + window.scrollY) {
+        //grab how much it's offset from the top of the box by
+        var offset = y_pos - dbrect.top;
+        //use this to caluclate where it should be dropped in the array
+        var res = calculateArrPos(offset, blockhei);
+        var loopid = "undef";
+
+        //checks if it landed within any of the loops
+        for (var i = 0; i < test.arr.length; i++) {
+            if (test.arr[i].funct.type === "repeatforeverfunct" || test.arr[i].funct.type === "repeatfunct") {
+                //get loop info
+                var ele = test.arr[i];
+                var loopele = document.getElementById(ele.divid);
+                var looprect = loopele.getBoundingClientRect();
+                //if within constraints of loop, add to loop's block reference and register loop to itself
+                if (y_pos >= looprect.top + blockhei && y_pos <= looprect.bottom) {
+                    loopid = loopele.id;
+                    inloop = true;
+                    //add the dragbit ids to the loop's block reference
+                    for (var k = 0; k < dragbit.length; k++) {
+                        ele.bref.push(dragbit[k].selected.id);
+                    }
+                    //reset loop height
+                    var totalhei = 0;
+                    for (var d = 0; d < dragbit.length; d++) {
+                        totalhei += dragbit[d].height;
+                    }
+                    //if new loop, reset height (because it's a slightly different height in the beginning)
+                    if (ele.bref.length < 2) {
+                        test.arr[i].height = 46 + totalhei;
+                    }
+                    //just add height of new block
+                    else {
+                        test.arr[i].height += totalhei;
+                    }
+                    //reset height in css
+                    loopele.style.height = test.arr[i].height + "px";
+                }
+            }
+        }
+
+        //actually start placing blocks   ******************************
+
+        //-------setting a top and left placement point for where we will start placing our dragged pieces------------//
+
+        var top = 0;
+        var shift = dragbit[0].height;
+        var left = 0;
+
+        //if block that's being set is within the loop, 
+        if (inloop) {
+            //look at the piece above it
+            var lastpiece = test.arr[res[1] - 1];
+            //if the bit you're placing is going to first within the loop
+            if (lastpiece.divid === loopid) {
+                //... make the top placement point the first point in loop
+                top = lastpiece.toppos + blockhei;
+                //also, shift the left placement point to the right because it's new in the loop
+                left = lastpiece.leftpos + 20;
+            }
+            //else, make the placement point behind the other piece in the loop
+            else {
+                top = lastpiece.toppos + lastpiece.height;
+                left = lastpiece.leftpos;
+            }
+        }
+        //if not in loop
+        else {
+            //get the top posititon by adding up all pieces above it
+            for (var d = 0; d < res[1]; d++) {
+                //loop height already includes the height of the stuff within bc it stretches to include them
+                if (!test.arr[d].inloop)
+                    top += test.arr[d].height;
+            }
+            //default left pos
+            left = -200;
+        }
+        //------------------end of determining top and left----------------------
+
+        //setting the drag pieces to the top placement
+        for (var g = 0; g < dragbit.length; g++) {
+            //in case you're dragging a loop, you have make sure the blocks within remain indented by changing the left position
+            if (g != 0 && dragbit[g].pi.inloop && dragbit[g - 1].selected.id === dragbit[g].pi.loopid) {
+                left = dragbit[g - 1].pi.leftpos + 20;
+            }
+            //reflect the block's changes in css
+            dragbit[g].selected.style.top = top + "px";
+            dragbit[g].selected.style.left = left + "px";
+            //if it were already used, get old loop info for the blocks inside
+            if (g != 0 && dragbit[g].pi != null) {
+                doit(dragbit[g].selected, res[1] + g, top, left, dragbit[g].pi.inloop, dragbit[g].pi.loopid, dragbit[g].bref);
+            } else {
+                doit(dragbit[g].selected, res[1] + g, top, left, inloop, loopid, dragbit[g].bref);
+            }
+            top += blockhei;
+        }
+        for (var g = res[1] + dragbit.length; g < test.arr.length; g++) {
+            if(!test.arr[g].inloop && dragbit.length < 2 && test.arr[g-1].inloop && test.arr[searchBlockArrayForDiv(test.arr, test.arr[g-1].loopid)].bref.length < 2){
+                var shiftoffset = blockhei - (test.arr[searchBlockArrayForDiv(test.arr, test.arr[g-1].loopid)].toppos + test.arr[searchBlockArrayForDiv(test.arr, test.arr[g-1].loopid)].height - test.arr[g].toppos);
+                //console.log(shiftoffset);
+                shift -= shiftoffset;
+            }
+                test.arr[g].toppos += shift;
+            test.arr[g].div.style.top = test.arr[g].toppos + "px";
+        }
+    }
+    // if it didn't land within the dropbox, DELETE IT FROM EXISTANCE
+    else if (dragbit.length > 0) {
+        for (var c = 0; c < dragbit.length; c++)
+            dragbit[c].selected.parentNode.removeChild(dragbit[c].selected);
+    }
+}
+
+function doit(selected, index, top, left, inloop, loopid, bref) {
+    if (hasClass(selected, "move")) {
+        test.arr.splice(index, 0, new Piece(left, top, new MoveFunct(), selected.id, selected, blockhei, inloop, loopid, bref));
+    } else if (hasClass(selected, "rotateleft")) {
+        test.arr.splice(index, 0, new Piece(left, top, new RotateLeftFunct(), selected.id, selected, blockhei, inloop, loopid, bref));
+    } else if (hasClass(selected, "rotateright")) {
+        test.arr.splice(index, 0, new Piece(left, top, new RotateRightFunct(), selected.id, selected, blockhei, inloop, loopid, bref));
+    } else if (hasClass(selected, "cangof")) {
+        test.arr.splice(index, 0, new Piece(left, top, new CanMoveFunct("forward"), selected.id, selected, blockhei, inloop, loopid, bref));
+    } else if (hasClass(selected, "cangob")) {
+        test.arr.splice(index, 0, new Piece(left, top, new CanMoveFunct("backward"), selected.id, selected, blockhei, inloop, loopid, bref));
+    } else if (hasClass(selected, "cangol")) {
+        test.arr.splice(index, 0, new Piece(left, top, new CanMoveFunct("left"), selected.id, selected, blockhei, inloop, loopid, bref));
+    } else if (hasClass(selected, "cangor")) {
+        test.arr.splice(index, 0, new Piece(left, top, new CanMoveFunct("right"), selected.id, selected, blockhei, inloop, loopid, bref));
+    } else if (hasClass(selected, "repeatf")) {
+        var trect = selected.getBoundingClientRect();
+        test.arr.splice(index, 0, new Piece(left, top, new RepeatForeverFunct(), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref));
+    } else if (hasClass(selected, "repeat")) {
+        var second = selected.id.substring(2);
+        var trect = selected.getBoundingClientRect();
+        test.arr.splice(index, 0, new Piece(left, top, new RepeatFunct("tp" + second), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref));
+    }
+    if (!hasClass(selected, "used"))
+        addClass(selected, "used");
+}
+
+function duplicate(theid) {
+    var original = document.getElementById(theid);
+    var clone = original.cloneNode(true); // "deep" clone
+    var first = original.id.substring(0, 2);
+    var second = original.id.substring(2);
+    clone.id = first + ++second;
+    original.parentNode.appendChild(clone);
+    original = document.getElementById(clone.id);
+    original.addEventListener("mousedown", function() {
+        drag_init(this);
+        return false;
+    })
+    if (first === "rp") {
+        var secondd = original.childNodes[0].childNodes[2].nextSibling.id.substring(2);
+        secondd = parseInt(secondd, 10);
+        original.childNodes[0].childNodes[2].nextSibling.id = "tp" + ++secondd;
+        document.getElementById("tp" + secondd).addEventListener('mouseenter', function() {
+            isOverTextBox = true;
+        })
+        document.getElementById("tp" + secondd).addEventListener('mouseleave', function() {
+            isOverTextBox = false;
+        })
+    }
+}
+
+
+//fires after mouseup from the bot, gets the bot to snap to grid
+function snap() {
+    if (dragbit[0].selected) {
+        var rect = c.getBoundingClientRect();
+        if (x_pos > rect.left + window.scrollX && x_pos < rect.right + window.scrollX && y_pos > rect.top + window.scrollY && y_pos < rect.bottom + window.scrollY) {
+            var xoffset = x_pos - rect.left - window.scrollX;
+            var xinarray = (xoffset - xoffset % blockWid) / blockWid;
+            var yoffset = y_pos - rect.top - window.scrollY;
+            var yinarray = (yoffset - yoffset % blockWid) / blockWid;
+            if (!m.grid[xinarray][yinarray].obstacle) {
+
+                dragbit[0].selected.style.left = xinarray * blockWid + rect.left + window.scrollX + "px";
+                dragbit[0].selected.style.top = yinarray * blockWid + rect.top + window.scrollY + "px";
+                bot.xarrpos = xinarray;
+                bot.yarrpos = yinarray;
+            }
+        } else {
+            dragbit[0].selected.style.left = "380px";
+            dragbit[0].selected.style.top = '90px';
+        }
+    }
+}
+
+//eventlisteners ---------------------------------------------------------------------------
+
+
+//buttons to control the bot
+document.getElementById("movebtn").addEventListener("click", function() {
+    bot.move();
+});
+document.getElementById("leftrbtn").addEventListener("click", function() {
+    bot.rotateLeft();
+});
+document.getElementById("rightrbtn").addEventListener("click", function() {
+    bot.rotateRight();
+});
+document.getElementById("forwardbtn").addEventListener("click", function() {
+    if (bot.canmove("forward"))
+        alert("good to go!");
+});
+document.getElementById("backwardbtn").addEventListener("click", function() {
+    if (bot.canmove("backward"))
+        alert("good to go!");
+
+});
+document.getElementById("rightbtn").addEventListener("click", function() {
+    if (bot.canmove("right"))
+        alert("good to go!");
+
+});
+document.getElementById("leftbtn").addEventListener("click", function() {
+    if (bot.canmove("left"))
+        alert("good to go!");
+});
 
 document.getElementById('bot').onmousedown = function() {
     drag_init(this);
     return false;
 };
-document.getElementById('bot').onmouseup = function() {
-    snap();
-};
 document.onmousemove = move_elem;
 document.onmouseup = destroy;
 
 document.getElementById("compileact").addEventListener("click", compileActions);
+document.getElementById("stop").addEventListener("click", stopActions);
+
+var classname = document.getElementsByClassName("piece");
+for (var i = 0; i < classname.length; i++) {
+
+    classname[i].addEventListener("mousedown", function() {
+        drag_init(this);
+        return false;
+    })
+}
+classname = document.getElementsByClassName("outer");
+for (var i = 0; i < classname.length; i++) {
+
+    classname[i].addEventListener("mousedown", function() {
+        drag_init(this);
+        return false;
+    })
+}
+document.getElementById("tp1").addEventListener('mouseenter', function() {
+    isOverTextBox = true;
+})
+document.getElementById("tp1").addEventListener('mouseleave', function() {
+    isOverTextBox = false;
+})
+

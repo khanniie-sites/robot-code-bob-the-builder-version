@@ -9,15 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
     <style>
-    .unselectable {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-    
     #myCanvas {
         position: absolute;
         top: 200px;
@@ -146,6 +137,12 @@
     }
     
     .piece {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
         position: absolute;
         font-size: .6em;
         width: 100px;
@@ -210,6 +207,12 @@
     }
     
     .outer {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
         position: absolute;
         left: 10px;
         height: 46px;
@@ -296,25 +299,25 @@
         <button id="leftrbtn">rotate left</button>
         <button id="rightrbtn">rotate right</button>
     </div>
-    <button id="compileact" class = "unselectable">run blocks</button>
-    <button id="stop" class = "unselectable">stop running</button>
+    <button id="compileact">run blocks</button>
+    <button id="stop">stop running</button>
     <div id="blockbox">
         <div id="dropbox" class="box"></div>
         <div id="toolbox" class="box">
-            <div class="piece unselectable move" id="mf1">move forward</div>
-            <div class="piece unselectable rotateleft" id="rl1">rotate left</div>
-            <div class="piece unselectable rotateright" id="rr1">rotate right</div>
-            <div class="piece unselectable cangof" id="cf1">canmove FORWARD </div>
-            <div class="piece unselectable cangob" id="cb1">canmove BACKWARD </div>
-            <div class="piece unselectable cangol" id="cl1">canmove LEFT </div>
-            <div class="piece unselectable cangor" id="cr1">canmove RIGHT </div>
-            <div class="repeatf loop unselectable outer" id="rf1">
+            <div class="piece move" id="mf1">move forward</div>
+            <div class="piece rotateleft" id="rl1">rotate left</div>
+            <div class="piece rotateright" id="rr1">rotate right</div>
+            <div class="piece cangof" id="cf1">canmove FORWARD </div>
+            <div class="piece cangob" id="cb1">canmove BACKWARD </div>
+            <div class="piece cangol" id="cl1">canmove LEFT </div>
+            <div class="piece cangor" id="cr1">canmove RIGHT </div>
+            <div class="repeatf loop outer" id="rf1">
                 <div class="inner-top">
                     repeat forever</div>
                 <div class="inner-middle"></div>
                 <div class="inner-bottom"></div>
             </div>
-            <div class="repeat outer unselectable loop" id="rp1">
+            <div class="repeat outer loop" id="rp1">
                 <div class="inner-top">
                     <div>repeat</div>
                     <input id="tp1" class="textinput" type="text" name="repeatnum"> </div>

@@ -47,7 +47,7 @@
         border-radius: 3px;
         background-color: #F1F1F1;
         width: 100px;
-        padding: 10px;
+        padding: 5px;
     }
     
     input {
@@ -86,7 +86,6 @@
     
     .dropdown-content p:hover {
         background-color: #f1f1f1;
-        color: black;
     }
     
     .dropdown:hover .dropdown-content {
@@ -95,7 +94,6 @@
     
     .dropdown:hover .dropbtn {
         background-color: #FFFFFF;
-        color: black;
     }
     #widthvalue{
         position: absolute;
@@ -134,11 +132,17 @@
         border: solid black 1px;
     }
     .piece{
+        -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
         position: absolute;
         font-size: .6em;
-        width: 75px;
+        width: 100px;
         /*height: 20px;*/
-        padding: 10px;
+        padding: 5px;
         background-color: #F1F1F1;
         border: 1px solid black;
         border-radius: 5px;
@@ -149,29 +153,97 @@
         top: 10px;
     }
     .rotateleft{
-        top: 50px;
+        top: 40px;
     }
     .rotateright{
-        top: 90px;
+        top: 70px;
     }
-    .cango{
+    .cangof{
+        top: 100px;
+    }
+    .cangob{
         top: 130px;
+    }
+    .cangol{
+        top: 160px;
+    }
+    .cangor{
+        top: 190px;
     }
     #compileact{
         position: absolute;
         left: 1000px;
         top: 10px;
-
     }
-    .dropbtn{
-        color: white;
-        background: black;
+    #stop{
+        position: absolute;
+        left: 800px;
+        top: 10px;
+        width: 140px;
     }
     .box{
         background-color: white;
+        z-index: -2;
     }
     #blockbox{
         background-color: lightgrey;
+        z-index: -10;
+    }
+    .outer{
+        -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+        position: absolute;
+        left: 10px;
+        height: 46px;
+        width: 120px;
+        border-left: black solid 1px;
+        border-bottom: black solid 1px;
+        border-top: black solid 1px;
+        border-radius: 5px;
+        overflow: hidden;
+        z-index: -1;
+    }
+    .inner-top{
+        position: absolute;
+        top: 0px;
+        font-size: .6em;
+        width: 110px;
+        padding: 5px;
+        background-color: #F1F1F1;
+        border-radius: 5px;
+    }
+    .inner-bottom{
+        position: absolute;
+        bottom: 0px;
+        font-size: .6em;
+        width: 120px;
+        height: 20px;
+        background-color: #F1F1F1;
+        border-radius: 5px;
+    }
+    .inner-middle{
+        position: absolute;
+        top: 15px;
+        font-size: .6em;
+        width: 10px;
+        height: 1000px;
+        padding: 5px;
+        background-color: #F1F1F1;
+    }
+    .repeatf{
+        top: 220px;
+    }
+    .repeat{
+        top: 280px;
+    }
+    .textinput{
+        position: absolute;
+        top: 1px;
+        height: 10px;
     }
 
     </style>
@@ -188,15 +260,53 @@
         <p>height</p>
         <input type="range" min="2" max="10" value="5" id="heightslider" /><div id="heightvalue">5</div>
     </div>
+    <div id="controlbox">
+    Manual Controls
+        <button id="movebtn">move forward</button>
+        <div class="dropdown">
+            <button class="dropbtn" id="canmove">can move</button>
+            <div class="dropdown-content">
+                <p id="forwardbtn">forward</p>
+                <p id="backwardbtn">backward</p>
+                <p id="leftbtn">left</p>
+                <p id="rightbtn">right</p>
+            </div>
+        </div>
+        <button id="leftrbtn">rotate left</button>
+        <button id="rightrbtn">rotate right</button>
+    </div>
+
     <button id="compileact">run blocks</button>
+    <button id="stop">stop running</button>
     <div id="blockbox">
         <div id="dropbox" class="box"></div>
         <div id="toolbox" class="box">
             <div class="piece move" id="mf1">move forward</div>
             <div class="piece rotateleft" id="rl1">rotate left</div>
             <div class="piece rotateright" id="rr1">rotate right</div>
-            <div class="piece cango" id="cm1">can move? 
-            <div class="dropdown">
+            <div class="piece cangof" id="cf1">canmove FORWARD </div>
+            <div class="piece cangob" id="cb1">canmove BACKWARD </div>
+            <div class="piece cangol" id="cl1">canmove LEFT </div>
+            <div class="piece cangor" id="cr1">canmove RIGHT </div>
+            <div class="repeatf loop outer" id="rf1"><div class="inner-top">
+            repeat forever</div>
+            <div class="inner-middle"></div>
+            <div class="inner-bottom"></div></div>
+            <div class="repeat outer loop" id="rp1"><div class="inner-top">
+            <div>repeat</div> <input id="tp1" class="textinput" type="text" name="repeatnum"> </div>
+            <div class="inner-middle"></div>
+            <div class="inner-bottom"></div>
+            </div>
+<!--             <div class="if outer" id="if1"> </div>
+            <div class="else outer" id="el1"> </div> -->
+
+    </div>
+    <script src="grid.js"></script>
+    <script src="blocks.js"></script>
+    <script src="gui.js"></script>
+</body>
+
+<!--  <div class="dropdown">
             <div class="dropbtn" id="cango">hover</button>
             <div class="dropdown-content">
                 <p id="forward">forward</p>
@@ -205,13 +315,6 @@
                 <p id="rightt">right</p>
             </div>
         </div>
-            </div>
-        </div>
-
-    </div>
-    <script src="grid.js"></script>
-    <script src="blocks.js"></script>
-    <script src="gui.js"></script>
-</body>
+            </div> -->
 
 </html>

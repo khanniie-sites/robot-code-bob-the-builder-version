@@ -1,3 +1,5 @@
+var endscript = false;
+
 //grid properties
 var maxWidth = 350;
 var width = 5;
@@ -41,7 +43,7 @@ Bot.prototype.move = function() {
     }
 
    
-    b.style.left = this.xarrpos * blockWid + rect.left + "px";
+    b.style.left = this.xarrpos * blockWid + rect.left +  "px";
     b.style.top = this.yarrpos * blockWid + rect.top + "px";
 }
 Bot.prototype.rotateLeft = function() {
@@ -92,7 +94,8 @@ Bot.prototype.canmove = function(direction) {
             return true;
         }
     }
-    alert("no good!");
+    alert("no good! you've hit an obstable or reached a wall! :(");
+    endscript = true;
     return false;
 }
 

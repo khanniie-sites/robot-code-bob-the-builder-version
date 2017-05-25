@@ -95,20 +95,18 @@
     .dropdown:hover .dropbtn {
         background-color: #FFFFFF;
     }
-    
-    #widthvalue {
+    #widthvalue{
         position: absolute;
         top: 80px;
         left: 173px;
+
     }
-    
-    #heightvalue {
+    #heightvalue{
         position: absolute;
         top: 110px;
         left: 173px;
     }
-    
-    #blockbox {
+    #blockbox{
         position: absolute;
         top: 50px;
         left: 600px;
@@ -116,8 +114,7 @@
         width: 500px;
         border: solid black 1px;
     }
-    
-    #toolbox {
+    #toolbox{
         position: absolute;
         left: 310px;
         margin: 10px;
@@ -126,8 +123,7 @@
         border: solid black 1px;
         top: 0px;
     }
-    
-    #dropbox {
+    #dropbox{
         position: absolute;
         margin: 10px;
         height: 480px;
@@ -135,14 +131,13 @@
         top: 0px;
         border: solid black 1px;
     }
-    
-    .piece {
+    .piece{
         -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
         position: absolute;
         font-size: .6em;
         width: 100px;
@@ -154,65 +149,53 @@
         left: 10px;
         top: 10px;
     }
-    
-    .move {
+    .move{
         top: 10px;
     }
-    
-    .rotateleft {
+    .rotateleft{
         top: 40px;
     }
-    
-    .rotateright {
+    .rotateright{
         top: 70px;
     }
-    
-    .cangof {
+    .cangof{
         top: 100px;
     }
-    
-    .cangob {
+    .cangob{
         top: 130px;
     }
-    
-    .cangol {
+    .cangol{
         top: 160px;
     }
-    
-    .cangor {
+    .cangor{
         top: 190px;
     }
-    
-    #compileact {
+    #compileact{
         position: absolute;
         left: 1000px;
         top: 10px;
     }
-    
-    #stop {
+    #stop{
         position: absolute;
         left: 800px;
         top: 10px;
         width: 140px;
     }
-    
-    .box {
+    .box{
         background-color: white;
         z-index: -2;
     }
-    
-    #blockbox {
+    #blockbox{
         background-color: lightgrey;
         z-index: -10;
     }
-    
-    .outer {
+    .outer{
         -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
         position: absolute;
         left: 10px;
         height: 46px;
@@ -224,8 +207,7 @@
         overflow: hidden;
         z-index: -1;
     }
-    
-    .inner-top {
+    .inner-top{
         position: absolute;
         top: 0px;
         font-size: .6em;
@@ -234,8 +216,7 @@
         background-color: #F1F1F1;
         border-radius: 5px;
     }
-    
-    .inner-bottom {
+    .inner-bottom{
         position: absolute;
         bottom: 0px;
         font-size: .6em;
@@ -244,8 +225,7 @@
         background-color: #F1F1F1;
         border-radius: 5px;
     }
-    
-    .inner-middle {
+    .inner-middle{
         position: absolute;
         top: 15px;
         font-size: .6em;
@@ -254,20 +234,18 @@
         padding: 5px;
         background-color: #F1F1F1;
     }
-    
-    .repeatf {
+    .repeatf{
         top: 220px;
     }
-    
-    .repeat {
+    .repeat{
         top: 280px;
     }
-    
-    .textinput {
+    .textinput{
         position: absolute;
         top: 1px;
         height: 10px;
     }
+
     </style>
 </head>
 
@@ -278,14 +256,12 @@
         <p>click squares to set/unset obstacles, drag and drop the bot to set it</p>
         <br>
         <p>width</p>
-        <input type="range" min="2" value="5" max="10" id="widthslider" />
-        <div id="widthvalue">5</div>
+        <input type="range" min="2" value="5" max="10" id="widthslider" /> <div id="widthvalue">5</div>
         <p>height</p>
-        <input type="range" min="2" max="10" value="5" id="heightslider" />
-        <div id="heightvalue">5</div>
+        <input type="range" min="2" max="10" value="5" id="heightslider" /><div id="heightvalue">5</div>
     </div>
     <div id="controlbox">
-        Manual Controls
+    Manual Controls
         <button id="movebtn">move forward</button>
         <div class="dropdown">
             <button class="dropbtn" id="canmove">can move</button>
@@ -299,6 +275,7 @@
         <button id="leftrbtn">rotate left</button>
         <button id="rightrbtn">rotate right</button>
     </div>
+
     <button id="compileact">run blocks</button>
     <button id="stop">stop running</button>
     <div id="blockbox">
@@ -311,26 +288,24 @@
             <div class="piece cangob" id="cb1">canmove BACKWARD </div>
             <div class="piece cangol" id="cl1">canmove LEFT </div>
             <div class="piece cangor" id="cr1">canmove RIGHT </div>
-            <div class="repeatf loop outer" id="rf1">
-                <div class="inner-top">
-                    repeat forever</div>
-                <div class="inner-middle"></div>
-                <div class="inner-bottom"></div>
+            <div class="repeatf loop outer" id="rf1"><div class="inner-top">
+            repeat forever</div>
+            <div class="inner-middle"></div>
+            <div class="inner-bottom"></div></div>
+            <div class="repeat outer loop" id="rp1"><div class="inner-top">
+            <div>repeat</div> <input id="tp1" class="textinput" type="text" name="repeatnum"> </div>
+            <div class="inner-middle"></div>
+            <div class="inner-bottom"></div>
             </div>
-            <div class="repeat outer loop" id="rp1">
-                <div class="inner-top">
-                    <div>repeat</div>
-                    <input id="tp1" class="textinput" type="text" name="repeatnum"> </div>
-                <div class="inner-middle"></div>
-                <div class="inner-bottom"></div>
-            </div>
-            <!--             <div class="if outer" id="if1"> </div>
+<!--             <div class="if outer" id="if1"> </div>
             <div class="else outer" id="el1"> </div> -->
-        </div>
-        <script src="grid.js"></script>
-        <script src="blocks.js"></script>
-        <script src="gui.js"></script>
+
+    </div>
+    <script src="grid.js"></script>
+    <script src="blocks.js"></script>
+    <script src="gui.js"></script>
 </body>
+
 <!--  <div class="dropdown">
             <div class="dropbtn" id="cango">hover</button>
             <div class="dropdown-content">

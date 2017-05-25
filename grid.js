@@ -42,9 +42,9 @@ Bot.prototype.move = function() {
         }
     }
 
-   
-    b.style.left = this.xarrpos * blockWid + rect.left +  "px";
-    b.style.top = this.yarrpos * blockWid + rect.top + "px";
+    rect = c.getBoundingClientRect();
+    b.style.left = this.xarrpos * blockWid + rect.left + window.scrollX + "px";
+    b.style.top = this.yarrpos * blockWid + rect.top + window.scrollY + "px";
 }
 Bot.prototype.rotateLeft = function() {
     this.direction -= 90;

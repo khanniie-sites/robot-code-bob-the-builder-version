@@ -9,6 +9,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css">
     <style>
+    .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
     #myCanvas {
         position: absolute;
         top: 200px;
@@ -95,18 +104,20 @@
     .dropdown:hover .dropbtn {
         background-color: #FFFFFF;
     }
-    #widthvalue{
+    
+    #widthvalue {
         position: absolute;
         top: 80px;
         left: 173px;
-
     }
-    #heightvalue{
+    
+    #heightvalue {
         position: absolute;
         top: 110px;
         left: 173px;
     }
-    #blockbox{
+    
+    #blockbox {
         position: absolute;
         top: 50px;
         left: 600px;
@@ -114,7 +125,8 @@
         width: 500px;
         border: solid black 1px;
     }
-    #toolbox{
+    
+    #toolbox {
         position: absolute;
         left: 310px;
         margin: 10px;
@@ -123,7 +135,8 @@
         border: solid black 1px;
         top: 0px;
     }
-    #dropbox{
+    
+    #dropbox {
         position: absolute;
         margin: 10px;
         height: 480px;
@@ -131,13 +144,8 @@
         top: 0px;
         border: solid black 1px;
     }
-    .piece{
-        -webkit-touch-callout: none;
--webkit-user-select: none;
--khtml-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
-user-select: none;
+    
+    .piece {
         position: absolute;
         font-size: .6em;
         width: 100px;
@@ -149,53 +157,59 @@ user-select: none;
         left: 10px;
         top: 10px;
     }
-    .move{
+    
+    .move {
         top: 10px;
     }
-    .rotateleft{
+    
+    .rotateleft {
         top: 40px;
     }
-    .rotateright{
+    
+    .rotateright {
         top: 70px;
     }
-    .cangof{
+    
+    .cangof {
         top: 100px;
     }
-    .cangob{
+    
+    .cangob {
         top: 130px;
     }
-    .cangol{
+    
+    .cangol {
         top: 160px;
     }
-    .cangor{
+    
+    .cangor {
         top: 190px;
     }
-    #compileact{
+    
+    #compileact {
         position: absolute;
         left: 1000px;
         top: 10px;
     }
-    #stop{
+    
+    #stop {
         position: absolute;
         left: 800px;
         top: 10px;
         width: 140px;
     }
-    .box{
+    
+    .box {
         background-color: white;
         z-index: -2;
     }
-    #blockbox{
+    
+    #blockbox {
         background-color: lightgrey;
         z-index: -10;
     }
-    .outer{
-        -webkit-touch-callout: none;
--webkit-user-select: none;
--khtml-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
-user-select: none;
+    
+    .outer {
         position: absolute;
         left: 10px;
         height: 46px;
@@ -207,7 +221,8 @@ user-select: none;
         overflow: hidden;
         z-index: -1;
     }
-    .inner-top{
+    
+    .inner-top {
         position: absolute;
         top: 0px;
         font-size: .6em;
@@ -216,7 +231,8 @@ user-select: none;
         background-color: #F1F1F1;
         border-radius: 5px;
     }
-    .inner-bottom{
+    
+    .inner-bottom {
         position: absolute;
         bottom: 0px;
         font-size: .6em;
@@ -225,7 +241,8 @@ user-select: none;
         background-color: #F1F1F1;
         border-radius: 5px;
     }
-    .inner-middle{
+    
+    .inner-middle {
         position: absolute;
         top: 15px;
         font-size: .6em;
@@ -234,18 +251,20 @@ user-select: none;
         padding: 5px;
         background-color: #F1F1F1;
     }
-    .repeatf{
+    
+    .repeatf {
         top: 220px;
     }
-    .repeat{
+    
+    .repeat {
         top: 280px;
     }
-    .textinput{
+    
+    .textinput {
         position: absolute;
         top: 1px;
         height: 10px;
     }
-
     </style>
 </head>
 
@@ -256,12 +275,14 @@ user-select: none;
         <p>click squares to set/unset obstacles, drag and drop the bot to set it</p>
         <br>
         <p>width</p>
-        <input type="range" min="2" value="5" max="10" id="widthslider" /> <div id="widthvalue">5</div>
+        <input type="range" min="2" value="5" max="10" id="widthslider" />
+        <div id="widthvalue">5</div>
         <p>height</p>
-        <input type="range" min="2" max="10" value="5" id="heightslider" /><div id="heightvalue">5</div>
+        <input type="range" min="2" max="10" value="5" id="heightslider" />
+        <div id="heightvalue">5</div>
     </div>
     <div id="controlbox">
-    Manual Controls
+        Manual Controls
         <button id="movebtn">move forward</button>
         <div class="dropdown">
             <button class="dropbtn" id="canmove">can move</button>
@@ -275,37 +296,38 @@ user-select: none;
         <button id="leftrbtn">rotate left</button>
         <button id="rightrbtn">rotate right</button>
     </div>
-
-    <button id="compileact">run blocks</button>
-    <button id="stop">stop running</button>
+    <button id="compileact" class = "unselectable">run blocks</button>
+    <button id="stop" class = "unselectable">stop running</button>
     <div id="blockbox">
         <div id="dropbox" class="box"></div>
         <div id="toolbox" class="box">
-            <div class="piece move" id="mf1">move forward</div>
-            <div class="piece rotateleft" id="rl1">rotate left</div>
-            <div class="piece rotateright" id="rr1">rotate right</div>
-            <div class="piece cangof" id="cf1">canmove FORWARD </div>
-            <div class="piece cangob" id="cb1">canmove BACKWARD </div>
-            <div class="piece cangol" id="cl1">canmove LEFT </div>
-            <div class="piece cangor" id="cr1">canmove RIGHT </div>
-            <div class="repeatf loop outer" id="rf1"><div class="inner-top">
-            repeat forever</div>
-            <div class="inner-middle"></div>
-            <div class="inner-bottom"></div></div>
-            <div class="repeat outer loop" id="rp1"><div class="inner-top">
-            <div>repeat</div> <input id="tp1" class="textinput" type="text" name="repeatnum"> </div>
-            <div class="inner-middle"></div>
-            <div class="inner-bottom"></div>
+            <div class="piece unselectable move" id="mf1">move forward</div>
+            <div class="piece unselectable rotateleft" id="rl1">rotate left</div>
+            <div class="piece unselectable rotateright" id="rr1">rotate right</div>
+            <div class="piece unselectable cangof" id="cf1">canmove FORWARD </div>
+            <div class="piece unselectable cangob" id="cb1">canmove BACKWARD </div>
+            <div class="piece unselectable cangol" id="cl1">canmove LEFT </div>
+            <div class="piece unselectable cangor" id="cr1">canmove RIGHT </div>
+            <div class="repeatf loop unselectable outer" id="rf1">
+                <div class="inner-top">
+                    repeat forever</div>
+                <div class="inner-middle"></div>
+                <div class="inner-bottom"></div>
             </div>
-<!--             <div class="if outer" id="if1"> </div>
+            <div class="repeat outer unselectable loop" id="rp1">
+                <div class="inner-top">
+                    <div>repeat</div>
+                    <input id="tp1" class="textinput" type="text" name="repeatnum"> </div>
+                <div class="inner-middle"></div>
+                <div class="inner-bottom"></div>
+            </div>
+            <!--             <div class="if outer" id="if1"> </div>
             <div class="else outer" id="el1"> </div> -->
-
-    </div>
-    <script src="grid.js"></script>
-    <script src="blocks.js"></script>
-    <script src="gui.js"></script>
+        </div>
+        <script src="grid.js"></script>
+        <script src="blocks.js"></script>
+        <script src="gui.js"></script>
 </body>
-
 <!--  <div class="dropdown">
             <div class="dropbtn" id="cango">hover</button>
             <div class="dropdown-content">

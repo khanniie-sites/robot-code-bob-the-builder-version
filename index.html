@@ -158,7 +158,7 @@ user-select: none;
     .rotateright{
         top: 70px;
     }
-    .cangof{
+/*    .cangof{
         top: 100px;
     }
     .cangob{
@@ -169,7 +169,7 @@ user-select: none;
     }
     .cangor{
         top: 190px;
-    }
+    }*/
     #compileact{
         position: absolute;
         left: 1000px;
@@ -235,16 +235,38 @@ user-select: none;
         background-color: #F1F1F1;
     }
     .repeatf{
-        top: 220px;
+        top: 100px;
     }
     .repeat{
-        top: 280px;
+        top: 155px;
     }
     .textinput{
         position: absolute;
         top: 1px;
         height: 10px;
     }
+    .if{
+        top: 210px;
+    }
+    .else{
+        top: 265px;
+    }
+    .elseif{
+        top: 320px;
+    }
+    .ifmenu{
+        position: absolute;
+        top: 1px;
+        left: 13px;
+        height: 10px;
+    }
+    .elsemenu{
+        position: absolute;
+        top: 1px;
+        left: 33px;
+        height: 10px;
+    }
+
 
     </style>
 </head>
@@ -284,10 +306,10 @@ user-select: none;
             <div class="piece move" id="mf1">move forward</div>
             <div class="piece rotateleft" id="rl1">rotate left</div>
             <div class="piece rotateright" id="rr1">rotate right</div>
-            <div class="piece cangof" id="cf1">canmove FORWARD </div>
+            <!-- <div class="piece cangof" id="cf1">canmove FORWARD </div>
             <div class="piece cangob" id="cb1">canmove BACKWARD </div>
             <div class="piece cangol" id="cl1">canmove LEFT </div>
-            <div class="piece cangor" id="cr1">canmove RIGHT </div>
+            <div class="piece cangor" id="cr1">canmove RIGHT </div> -->
             <div class="repeatf loop outer" id="rf1"><div class="inner-top">
             repeat forever</div>
             <div class="inner-middle"></div>
@@ -299,7 +321,28 @@ user-select: none;
             </div>
 <!--             <div class="if outer" id="if1"> </div>
             <div class="else outer" id="el1"> </div> -->
-
+            <div class="if loop outer" id="if1"><div class="inner-top">
+            <div>if</div> <select name="ifmenu" class="ifmenu" id="id1">
+                <option value="forward">canmove forward</option>
+                <option value="backward">canmove backward</option>
+                <option value="right">canmove right</option>
+                <option value="left">canmove left</option>
+                </select> </div>
+            <div class="inner-middle"></div>
+            <div class="inner-bottom"></div></div>
+            <div class="elseif loop outer" id="ei1"><div class="inner-top">
+            <div>else if</div> <select name="elsemenu" class="elsemenu" id="ed1">
+                <option value="forward">cm forward</option>
+                <option value="backward">cm backward</option>
+                <option value="right">cm right</option>
+                <option value="left">cm left</option>
+                </select> </div>
+            <div class="inner-middle"></div>
+            <div class="inner-bottom"></div></div>
+            <div class="else loop outer" id="el1"><div class="inner-top">
+            <div>else</div></div>
+            <div class="inner-middle"></div>
+            <div class="inner-bottom"></div></div>
     </div>
     <script src="grid.js"></script>
     <script src="blocks.js"></script>

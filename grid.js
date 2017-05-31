@@ -27,7 +27,7 @@ function Bot() {
 Bot.prototype.move = function() {
     //polar coordinates inverted kinda ish
     //0- right/ 90- down/ 180 - left/ 270 -up
-    if (bot.canmove("forward")) {
+    if (bot.canmove("forward", false)) {
         if (this.direction == 0) {
             this.xarrpos++;
         }
@@ -60,7 +60,7 @@ Bot.prototype.rotateRight = function() {
     }
     b.style.transform = "rotate(" + this.direction + "deg)";
 }
-Bot.prototype.canmove = function(direction) {
+Bot.prototype.canmove = function(direction, isif) {
     var angle;
     if(direction === "undef"){
         alert("choose a direction!");
@@ -94,8 +94,10 @@ Bot.prototype.canmove = function(direction) {
             return true;
         }
     }
-    alert("no good! you've hit an obstable or reached a wall! :(");
-    endscript = true;
+    if(!isif){
+        alert("no good! you've hit an obstable or reached a wall! :(");
+        endscript = true;
+    }
     return false;
 }
 

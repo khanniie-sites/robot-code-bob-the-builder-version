@@ -27,7 +27,7 @@ function searchBlockArrayForDiv(arr, divname) {
     return -1;
 }
 
-function searchBrefForDiv(arr, divname){
+function searchBrefForDiv(arr, divname) {
     for (var i = 0; i < arr.length; i++) {
         if (arr[i] === divname) {
             return i;
@@ -36,20 +36,44 @@ function searchBrefForDiv(arr, divname){
     return -1;
 }
 
-function calculateArrPos(offset, blockhei) {
+// function isLayer(layerarr, piece){
+//     for(var i = 0; i< layerarr.length; i++){
+//         if(piece === layerarr[i]){
+//             return true;
+//         }
+//     }
+//     return false;
+// }
+function deeperLayer(pabove, pbelow) {
+    var res = false;
+    if (pabove.layer.length > pbelow.layer.length) {
+        res = true;
+    }
+    return [res, pabove.layer.length - pbelow.layer.length];
+}
+
+function calculateArrPos(offset, blockhei, inloop, layer) {
     var top = offset - offset % blockhei;
     var pos = 0;
-    var arrpos = top/blockhei;
-    if(arrpos > test.arr.length){
-        arrpos = test.arr.length;
-        return [top, arrpos];
-    }
-    for(var i = 1; i< arrpos; i++){
-        if(!test.arr[i].inloop && test.arr[i -1].inloop){
-            arrpos--;
+    var arrpos = top / blockhei;
+    var change = 0;
+    for (var i = 0; i < arrpos; i++) {
+        if (test.arr[i] != null) {
+            if (i != 0 && deeperLayer(test.arr[i - 1], test.arr[i])[0]) {
+                console.log(deeperLayer(test.arr[i - 1], test.arr[i])[0]);
+                arrpos -= deeperLayer(test.arr[i - 1], test.arr[i])[1];
+                change += deeperLayer(test.arr[i - 1], test.arr[i])[1];
+            } else if (test.arr[i].outer && test.arr[i].bref.length < 1) {
+                arrpos--;
+                change++;
+            }
         }
     }
-    return [top, arrpos];
+    console.log(arrpos, change);
+    if (arrpos > test.arr.length) {
+        arrpos = test.arr.length;
+    }
+    return arrpos;
     //return [inlooparrpos, arrpos];
 }
 
@@ -103,12 +127,14 @@ function drag_init(elem) {
         //if the element was in a loop, remove its id from the loop's storage and change the height of the loop
         if (element.inloop) {
             //get the loop element that the block was assigned to
-            var loopele = test.arr[searchBlockArrayForDiv(test.arr, element.loopid)];
-            //change height of that element, both in css and in the array object
-            document.getElementById(element.loopid).style.height = loopele.height - element.height + "px";
-            loopele.height -= element.height;
-            //remove from loop's block ref storage
-            loopele.bref.splice(searchBrefForDiv(loopele.bref, elem.id), 1);
+            for (var l = 0; l < element.layer.length; l++) {
+                var loopele = element.layer[l];
+                //change height of that element, both in css and in the array object
+                loopele.div.style.height = loopele.height - element.height + "px";
+                loopele.height -= element.height;
+                //remove from loop's block ref storage
+                loopele.bref.splice(searchBrefForDiv(loopele.bref, elem.id), 1);
+            }
         }
         //shifts all elements below up
         for (var j = searchBlockArrayForDiv(test.arr, elem.id) + 1; j < test.arr.length; j++) {
@@ -168,12 +194,12 @@ function snapB() {
         //grab how much it's offset from the top of the box by
         var offset = y_pos - dbrect.top;
         //use this to caluclate where it should be dropped in the array
-        var res = calculateArrPos(offset, blockhei);
         var loopid = "undef";
+        var layer = [];
 
         //checks if it landed within any of the loops
         for (var i = 0; i < test.arr.length; i++) {
-            if (test.arr[i].funct.type === "repeatforeverfunct" || test.arr[i].funct.type === "repeatfunct") {
+            if (test.arr[i].outer) {
                 //get loop info
                 var ele = test.arr[i];
                 var loopele = document.getElementById(ele.divid);
@@ -204,6 +230,13 @@ function snapB() {
                 }
             }
         }
+        if (inloop) {
+            var ele = test.arr[searchBlockArrayForDiv(test.arr, loopid)];
+            for (var a = 0; a < ele.layer.length; a++) {
+                layer.push(ele.layer[a]);
+            }
+            layer.push(ele);
+        }
 
         //actually start placing blocks   ******************************
 
@@ -212,11 +245,12 @@ function snapB() {
         var top = 0;
         var shift = dragbit[0].height;
         var left = 0;
+        var res = calculateArrPos(offset, blockhei, inloop, layer);
 
         //if block that's being set is within the loop, 
         if (inloop) {
             //look at the piece above it
-            var lastpiece = test.arr[res[1] - 1];
+            var lastpiece = test.arr[res - 1];
             //if the bit you're placing is going to first within the loop
             if (lastpiece.divid === loopid) {
                 //... make the top placement point the first point in loop
@@ -226,14 +260,22 @@ function snapB() {
             }
             //else, make the placement point behind the other piece in the loop
             else {
-                top = lastpiece.toppos + lastpiece.height;
-                left = lastpiece.leftpos;
+                //grab last piece IN SAME LAYER AS THE ONE YOU'RE PLACING IT IN
+                var lastpieceinsamelayer;
+                for (var b = 0; b < res; b++) {
+                    if (test.arr[b].layer.length == layer.length) {
+                        lastpieceinsamelayer = test.arr[b];
+                    }
+                }
+                //set top based on that
+                top = lastpieceinsamelayer.toppos + lastpieceinsamelayer.height;
+                left = lastpieceinsamelayer.leftpos;
             }
         }
         //if not in loop
         else {
             //get the top posititon by adding up all pieces above it
-            for (var d = 0; d < res[1]; d++) {
+            for (var d = 0; d < res; d++) {
                 //loop height already includes the height of the stuff within bc it stretches to include them
                 if (!test.arr[d].inloop)
                     top += test.arr[d].height;
@@ -254,19 +296,25 @@ function snapB() {
             dragbit[g].selected.style.left = left + "px";
             //if it were already used, get old loop info for the blocks inside
             if (g != 0 && dragbit[g].pi != null) {
-                doit(dragbit[g].selected, res[1] + g, top, left, dragbit[g].pi.inloop, dragbit[g].pi.loopid, dragbit[g].bref);
+                var newlayer = [];
+                i = layer.length;
+                while (i--) newlayer.push(layer[i]);
+
+                newlayer.push(dragbit[0]);
+
+                doit(dragbit[g].selected, res + g, top, left, dragbit[g].pi.inloop, dragbit[g].pi.loopid, dragbit[g].bref, newlayer);
             } else {
-                doit(dragbit[g].selected, res[1] + g, top, left, inloop, loopid, dragbit[g].bref);
+                doit(dragbit[g].selected, res + g, top, left, inloop, loopid, dragbit[g].bref, layer);
             }
             top += blockhei;
         }
-        for (var g = res[1] + dragbit.length; g < test.arr.length; g++) {
-            if(!test.arr[g].inloop && dragbit.length < 2 && test.arr[g-1].inloop && test.arr[searchBlockArrayForDiv(test.arr, test.arr[g-1].loopid)].bref.length < 2){
-                var shiftoffset = blockhei - (test.arr[searchBlockArrayForDiv(test.arr, test.arr[g-1].loopid)].toppos + test.arr[searchBlockArrayForDiv(test.arr, test.arr[g-1].loopid)].height - test.arr[g].toppos);
+        for (var g = res + dragbit.length; g < test.arr.length; g++) {
+            if (!test.arr[g].inloop && dragbit.length < 2 && test.arr[g - 1].inloop && test.arr[searchBlockArrayForDiv(test.arr, test.arr[g - 1].loopid)].bref.length < 2) {
+                var shiftoffset = blockhei - (test.arr[searchBlockArrayForDiv(test.arr, test.arr[g - 1].loopid)].toppos + test.arr[searchBlockArrayForDiv(test.arr, test.arr[g - 1].loopid)].height - test.arr[g].toppos);
                 //console.log(shiftoffset);
                 shift -= shiftoffset;
             }
-                test.arr[g].toppos += shift;
+            test.arr[g].toppos += shift;
             test.arr[g].div.style.top = test.arr[g].toppos + "px";
         }
     }
@@ -277,28 +325,39 @@ function snapB() {
     }
 }
 
-function doit(selected, index, top, left, inloop, loopid, bref) {
+function doit(selected, index, top, left, inloop, loopid, bref, lay) {
     if (hasClass(selected, "move")) {
-        test.arr.splice(index, 0, new Piece(left, top, new MoveFunct(), selected.id, selected, blockhei, inloop, loopid, bref));
+        test.arr.splice(index, 0, new Piece(left, lay, top, new MoveFunct(), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "rotateleft")) {
-        test.arr.splice(index, 0, new Piece(left, top, new RotateLeftFunct(), selected.id, selected, blockhei, inloop, loopid, bref));
+        test.arr.splice(index, 0, new Piece(left, lay, top, new RotateLeftFunct(), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "rotateright")) {
-        test.arr.splice(index, 0, new Piece(left, top, new RotateRightFunct(), selected.id, selected, blockhei, inloop, loopid, bref));
+        test.arr.splice(index, 0, new Piece(left, lay, top, new RotateRightFunct(), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "cangof")) {
-        test.arr.splice(index, 0, new Piece(left, top, new CanMoveFunct("forward"), selected.id, selected, blockhei, inloop, loopid, bref));
+        test.arr.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("forward"), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "cangob")) {
-        test.arr.splice(index, 0, new Piece(left, top, new CanMoveFunct("backward"), selected.id, selected, blockhei, inloop, loopid, bref));
+        test.arr.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("backward"), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "cangol")) {
-        test.arr.splice(index, 0, new Piece(left, top, new CanMoveFunct("left"), selected.id, selected, blockhei, inloop, loopid, bref));
+        test.arr.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("left"), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "cangor")) {
-        test.arr.splice(index, 0, new Piece(left, top, new CanMoveFunct("right"), selected.id, selected, blockhei, inloop, loopid, bref));
+        test.arr.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("right"), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "repeatf")) {
         var trect = selected.getBoundingClientRect();
-        test.arr.splice(index, 0, new Piece(left, top, new RepeatForeverFunct(), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref));
+        test.arr.splice(index, 0, new Piece(left, lay, top, new RepeatForeverFunct(), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
     } else if (hasClass(selected, "repeat")) {
         var second = selected.id.substring(2);
         var trect = selected.getBoundingClientRect();
-        test.arr.splice(index, 0, new Piece(left, top, new RepeatFunct("tp" + second), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref));
+        test.arr.splice(index, 0, new Piece(left, lay, top, new RepeatFunct("tp" + second), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
+    } else if (hasClass(selected, "if")) {
+        var second = selected.id.substring(2);
+        var trect = selected.getBoundingClientRect();
+        test.arr.splice(index, 0, new Piece(left, lay, top, new IfFunct("id" + second), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
+    } else if (hasClass(selected, "elseif")) {
+        var second = selected.id.substring(2);
+        var trect = selected.getBoundingClientRect();
+        test.arr.splice(index, 0, new Piece(left, lay, top, new ElseIfFunct("ed" + second), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
+    } else if (hasClass(selected, "else")) {
+        var trect = selected.getBoundingClientRect();
+        test.arr.splice(index, 0, new Piece(left, lay, top, new ElseFunct(), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
     }
     if (!hasClass(selected, "used"))
         addClass(selected, "used");
@@ -324,6 +383,26 @@ function duplicate(theid) {
             isOverTextBox = true;
         })
         document.getElementById("tp" + secondd).addEventListener('mouseleave', function() {
+            isOverTextBox = false;
+        })
+    } else if (first === "if") {
+        var secondd = original.childNodes[0].childNodes[2].nextSibling.id.substring(2);
+        secondd = parseInt(secondd, 10);
+        original.childNodes[0].childNodes[2].nextSibling.id = "id" + ++secondd;
+        document.getElementById("id" + secondd).addEventListener('mouseenter', function() {
+            isOverTextBox = true;
+        })
+        document.getElementById("id" + secondd).addEventListener('mouseleave', function() {
+            isOverTextBox = false;
+        })
+    } else if (first === "ei") {
+        var secondd = original.childNodes[0].childNodes[2].nextSibling.id.substring(2);
+        secondd = parseInt(secondd, 10);
+        original.childNodes[0].childNodes[2].nextSibling.id = "ed" + ++secondd;
+        document.getElementById("ed" + secondd).addEventListener('mouseenter', function() {
+            isOverTextBox = true;
+        })
+        document.getElementById("ed" + secondd).addEventListener('mouseleave', function() {
             isOverTextBox = false;
         })
     }
@@ -367,21 +446,21 @@ document.getElementById("rightrbtn").addEventListener("click", function() {
     bot.rotateRight();
 });
 document.getElementById("forwardbtn").addEventListener("click", function() {
-    if (bot.canmove("forward"))
+    if (bot.canmove("forward", false))
         alert("good to go!");
 });
 document.getElementById("backwardbtn").addEventListener("click", function() {
-    if (bot.canmove("backward"))
+    if (bot.canmove("backward", false))
         alert("good to go!");
 
 });
 document.getElementById("rightbtn").addEventListener("click", function() {
-    if (bot.canmove("right"))
+    if (bot.canmove("right", false))
         alert("good to go!");
 
 });
 document.getElementById("leftbtn").addEventListener("click", function() {
-    if (bot.canmove("left"))
+    if (bot.canmove("left", false))
         alert("good to go!");
 });
 
@@ -417,4 +496,15 @@ document.getElementById("tp1").addEventListener('mouseenter', function() {
 document.getElementById("tp1").addEventListener('mouseleave', function() {
     isOverTextBox = false;
 })
-
+document.getElementById("id1").addEventListener('mouseenter', function() {
+    isOverTextBox = true;
+})
+document.getElementById("id1").addEventListener('mouseleave', function() {
+    isOverTextBox = false;
+})
+document.getElementById("ed1").addEventListener('mouseenter', function() {
+    isOverTextBox = true;
+})
+document.getElementById("ed1").addEventListener('mouseleave', function() {
+    isOverTextBox = false;
+})

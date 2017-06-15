@@ -15,6 +15,7 @@ var hangingif = false;
 var hangingifendpoint = -1;
 var longtime = true;
 var speed = 500;
+var problemlist = [];
 
 var Blocks = function() {
     this.arr = [];
@@ -193,6 +194,16 @@ function resetIfs(){
 }
 
 function compileActions() {
+	 var problemlist = checker();
+    var finallist = "";
+    if(problemlist.length > 0){
+    	for(var b = 0; b < problemlist.length; b++){
+    		finallist += problemlist[b] + "   //   ";
+    	}
+    	alert(finallist);
+    	return;
+    }
+
     times = 500;
     timecounter = 1;
     endscript = false;
@@ -202,6 +213,8 @@ function compileActions() {
     endpoint = test.arr.length - 1;
     var tid = setTimeout(mycode, 200);
 
+    
+
     function mycode() {
         // if(hangingifendpoint != counter.count){
         // 	hangingif = false;
@@ -209,6 +222,7 @@ function compileActions() {
         if (counter.count > endpoint || endscript) {
             clearTimeout(tid);
         } else if (counter.count <= endpoint) {
+        	console.log(counter.count);
             act(tid, test.arr[counter.count]);
             counter.count++;
 
@@ -240,15 +254,44 @@ function stopActions() {
 }
 
 
-function checkifs(){
+function checker(){
 	var waitingif = false;
-	var endpoint = -1;
+	problemlist = [];
 
 	for(var i = 0; i < test.arr.length; i++){
-		if(test.arr[i].funct.type === "iffunct" ){
-			waitingif = true;
+		var pie = test.arr[i];
+		if(pie.outer && pie.bref.length < 1){
+			var problem = "Empty loop or if/else statement at block # " + (i+1); 
+			problemlist.push(problem);
 		}
-		
+		if (pie.funct.type === "repeatfunct") {
+        var checktimes = parseInt(document.getElementById(pie.funct.inputid).value, 10);
+        if (!(checktimes > 0)) {
+            var problem = "No value entered for the repeat loop at block # " + (i+1); 
+			problemlist.push(problem);
+        }
+	}}
+	for(var i = 0; i < test.arr.length; i++){
+		var pie = test.arr[i];
 
-	}
+		if(!waitingif && (pie.funct.type === "elsefunct" || pie.funct === "elseiffunct")){
+			var problem = "Else statement at block # " + (i+1) + " should be directly below if statement"; 
+			problemlist.push(problem);
+		}
+		if(pie.funct.type === "iffunct" || pie.funct.type === "elseiffunct"){
+			waitingif = true;
+			}
+        else{
+        	waitingif = false;
+        }
+        if(pie.outer && pie.bref.length > 0){
+        	i = searchBlockArrayForDiv(test.arr, pie.bref[0]);
+        	for (var j = 0; j < pie.bref.length; j++) {
+            if (searchBlockArrayForDiv(test.arr, pie.bref[j]) > i) {
+                i = searchBlockArrayForDiv(test.arr, pie.bref[j]);
+            }
+        }
+        }
+		}
+	return problemlist;
 }

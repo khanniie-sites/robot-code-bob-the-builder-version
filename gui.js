@@ -508,3 +508,9 @@ document.getElementById("ed1").addEventListener('mouseenter', function() {
 document.getElementById("ed1").addEventListener('mouseleave', function() {
     isOverTextBox = false;
 })
+
+document.getElementById("speedslider").addEventListener("mouseup", function(){
+    speed = -1 * 100 * (this.value - 11);
+        document.getElementById("speedvalue").innerHTML = this.value;
+});
+

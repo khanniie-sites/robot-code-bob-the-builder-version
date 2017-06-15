@@ -56,13 +56,16 @@
     }
     
     #widthslider {
-        top: 80px;
+        top: 70px;
     }
     
     #heightslider {
+        top: 90px;
+    }
+    #speedslider{
         top: 110px;
     }
-    
+
     .dropdown {
         position: relative;
         display: inline-block;
@@ -97,11 +100,16 @@
     }
     #widthvalue{
         position: absolute;
-        top: 80px;
+        top: 70px;
         left: 173px;
 
     }
     #heightvalue{
+        position: absolute;
+        top: 90px;
+        left: 173px;
+    }
+    #speedvalue{
         position: absolute;
         top: 110px;
         left: 173px;
@@ -281,6 +289,8 @@ user-select: none;
         <input type="range" min="2" value="5" max="10" id="widthslider" /> <div id="widthvalue">5</div>
         <p>height</p>
         <input type="range" min="2" max="10" value="5" id="heightslider" /><div id="heightvalue">5</div>
+        <p>bot speed</p>
+        <input type="range" min="1" max="10" value="5" id="speedslider" /><div id="speedvalue">5</div>
     </div>
     <div id="controlbox">
     Manual Controls

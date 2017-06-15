@@ -1,7 +1,6 @@
 // //to do
 
 // - check that ifs and elses are in the right place when they hit run
-// - fix the lastpiece thing
 
 var CounterObj = function(count) {
     this.count = count;
@@ -14,6 +13,8 @@ var timecounter = 1;
 var times = 500;
 var hangingif = false;
 var hangingifendpoint = -1;
+var longtime = true;
+var speed = 500;
 
 var Blocks = function() {
     this.arr = [];
@@ -80,12 +81,15 @@ function searchBlockArrayForDiv(arr, divname) {
 
 var act = function(tid, p) {
     if (p.funct.type === "movefunct") {
+    	longtime = true;
         bot.move();
     }
     if (p.funct.type === "rotateleftfunct") {
+    	longtime = true;
         bot.rotateLeft();
     }
     if (p.funct.type === "rotaterightfunct") {
+    	longtime = true;
         bot.rotateRight();
     }
     // if (p.funct.type === "canmovefunct") {
@@ -93,6 +97,7 @@ var act = function(tid, p) {
     //         alert("good to go!");
     // }
     if (p.funct.type === "repeatforeverfunct" && p.bref.length > 0) {
+    	longtime = false;
         loop = true;
         endpoint = searchBlockArrayForDiv(test.arr, p.bref[0]);
         startpoint = searchBlockArrayForDiv(test.arr, p.bref[0]);
@@ -107,6 +112,7 @@ var act = function(tid, p) {
         counter.count = startpoint - 1;
     }
     if (p.funct.type === "repeatfunct") {
+    	longtime = false;
         loop = true;
         times = parseInt(document.getElementById(p.funct.inputid).value, 10);
         if (!(times > 0)) {
@@ -128,6 +134,7 @@ var act = function(tid, p) {
         counter.count = startpoint - 1;
     }
     if (p.funct.type === "iffunct") {
+    	longtime = false;
         var end = searchBlockArrayForDiv(test.arr, p.bref[0]);
         for (var i = 0; i < p.bref.length; i++) {
             if (searchBlockArrayForDiv(test.arr, p.bref[i]) > end) {
@@ -146,6 +153,7 @@ var act = function(tid, p) {
         }
     }
     if (p.funct.type === "elsefunct") {
+    	longtime = false;
         if (!(hangingif)) {
             var end = searchBlockArrayForDiv(test.arr, p.bref[0]);
             for (var i = 0; i < p.bref.length; i++) {
@@ -159,6 +167,7 @@ var act = function(tid, p) {
     }
 
     if (p.funct.type === "elseiffunct") {
+    	longtime = false;
     	var end = searchBlockArrayForDiv(test.arr, p.bref[0]);
             for (var i = 0; i < p.bref.length; i++) {
                 if (searchBlockArrayForDiv(test.arr, p.bref[i]) > end) {
@@ -204,7 +213,7 @@ function compileActions() {
             counter.count++;
 
             if (timecounter >= times) {
-                times = 500;
+                times = 500; 
                 loop = false;
                 endpoint = test.arr.length - 1;
             }
@@ -212,7 +221,13 @@ function compileActions() {
                 counter.count = startpoint;
                 timecounter++;
             }
-            tid = setTimeout(mycode, 450);
+            if(longtime){
+            	tid = setTimeout(mycode, speed);
+            }
+            else{
+            	tid = setTimeout(mycode, 0);
+            }
+            
         }
 
     }
@@ -222,4 +237,18 @@ function stopActions() {
     //counter.count = 0;
     forever = false;
     endscript = true;
+}
+
+
+function checkifs(){
+	var waitingif = false;
+	var endpoint = -1;
+
+	for(var i = 0; i < test.arr.length; i++){
+		if(test.arr[i].funct.type === "iffunct" ){
+			waitingif = true;
+		}
+		
+
+	}
 }

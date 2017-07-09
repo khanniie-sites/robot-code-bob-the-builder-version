@@ -58,20 +58,20 @@ function calculateArrPos(offset, blockhei, inloop, layer) {
     var arrpos = top / blockhei;
     var change = 0;
     for (var i = 0; i < arrpos; i++) {
-        if (test.arr[i] != null) {
-            if (i != 0 && deeperLayer(test.arr[i - 1], test.arr[i])[0]) {
-                console.log(deeperLayer(test.arr[i - 1], test.arr[i])[0]);
-                arrpos -= deeperLayer(test.arr[i - 1], test.arr[i])[1];
-                change += deeperLayer(test.arr[i - 1], test.arr[i])[1];
-            } else if (test.arr[i].outer && test.arr[i].bref.length < 1) {
+        if (blocks[i] != null) {
+            if (i != 0 && deeperLayer(blocks[i - 1], blocks[i])[0]) {
+                console.log(deeperLayer(blocks[i - 1], blocks[i])[0]);
+                arrpos -= deeperLayer(blocks[i - 1], blocks[i])[1];
+                change += deeperLayer(blocks[i - 1], blocks[i])[1];
+            } else if (blocks[i].outer && blocks[i].bref.length < 1) {
                 arrpos--;
                 change++;
             }
         }
     }
     console.log(arrpos, change);
-    if (arrpos > test.arr.length) {
-        arrpos = test.arr.length;
+    if (arrpos > blocks.length) {
+        arrpos = blocks.length;
     }
     return arrpos;
     //return [inlooparrpos, arrpos];
@@ -105,7 +105,7 @@ function drag_init(elem) {
 
     //if the piece is within the dropbox
     if (hasClass(elem, "used")) {
-        var element = test.arr[searchBlockArrayForDiv(test.arr, elem.id)];
+        var element = blocks[searchBlockArrayForDiv(blocks, elem.id)];
         var numremove = 1;
 
         //add first element
@@ -117,7 +117,7 @@ function drag_init(elem) {
         if (hasClass(elem, "outer")) {
             numremove = element.bref.length + 1;
             for (var i = 0; i < element.bref.length; i++) {
-                var tempinarr = test.arr[searchBlockArrayForDiv(test.arr, element.bref[i])];
+                var tempinarr = blocks[searchBlockArrayForDiv(blocks, element.bref[i])];
                 var temp = new DragPart(document.getElementById(element.bref[i]), tempinarr.height, x_pos - document.getElementById(element.bref[i]).offsetLeft, y_pos - document.getElementById(element.bref[i]).offsetTop, tempinarr);
                 dragbit.push(temp);
                 dragbit[i + 1].bref = tempinarr.bref;
@@ -137,17 +137,17 @@ function drag_init(elem) {
             }
         }
         //shifts all elements below up
-        for (var j = searchBlockArrayForDiv(test.arr, elem.id) + 1; j < test.arr.length; j++) {
-            test.arr[j].toppos -= element.height;
+        for (var j = searchBlockArrayForDiv(blocks, elem.id) + 1; j < blocks.length; j++) {
+            blocks[j].toppos -= element.height;
         }
 
         //remove all blocks from main block array
-        test.arr.splice(searchBlockArrayForDiv(test.arr, elem.id), numremove);
+        blocks.splice(searchBlockArrayForDiv(blocks, elem.id), numremove);
 
         //reflect position changes on screen
-        for (var j = 0; j < test.arr.length; j++) {
-            document.getElementById(test.arr[j].divid).style.top = test.arr[j].toppos + "px";
-            document.getElementById(test.arr[j].divid).style.left = test.arr[j].leftpos + "px";
+        for (var j = 0; j < blocks.length; j++) {
+            document.getElementById(blocks[j].divid).style.top = blocks[j].toppos + "px";
+            document.getElementById(blocks[j].divid).style.left = blocks[j].leftpos + "px";
         }
     }
     //if unused, grabbed from toolbox
@@ -198,10 +198,10 @@ function snapB() {
         var layer = [];
 
         //checks if it landed within any of the loops
-        for (var i = 0; i < test.arr.length; i++) {
-            if (test.arr[i].outer) {
+        for (var i = 0; i < blocks.length; i++) {
+            if (blocks[i].outer) {
                 //get loop info
-                var ele = test.arr[i];
+                var ele = blocks[i];
                 var loopele = document.getElementById(ele.divid);
                 var looprect = loopele.getBoundingClientRect();
                 //if within constraints of loop, add to loop's block reference and register loop to itself
@@ -219,19 +219,19 @@ function snapB() {
                     }
                     //if new loop, reset height (because it's a slightly different height in the beginning)
                     if (ele.bref.length < 2) {
-                        test.arr[i].height = 46 + totalhei;
+                        blocks[i].height = 46 + totalhei;
                     }
                     //just add height of new block
                     else {
-                        test.arr[i].height += totalhei;
+                        blocks[i].height += totalhei;
                     }
                     //reset height in css
-                    loopele.style.height = test.arr[i].height + "px";
+                    loopele.style.height = blocks[i].height + "px";
                 }
             }
         }
         if (inloop) {
-            var ele = test.arr[searchBlockArrayForDiv(test.arr, loopid)];
+            var ele = blocks[searchBlockArrayForDiv(blocks, loopid)];
             for (var a = 0; a < ele.layer.length; a++) {
                 layer.push(ele.layer[a]);
             }
@@ -250,7 +250,7 @@ function snapB() {
         //if block that's being set is within the loop, 
         if (inloop) {
             //look at the piece above it
-            var lastpiece = test.arr[res - 1];
+            var lastpiece = blocks[res - 1];
             //if the bit you're placing is going to first within the loop
             if (lastpiece.divid === loopid) {
                 //... make the top placement point the first point in loop
@@ -263,8 +263,8 @@ function snapB() {
                 //grab last piece IN SAME LAYER AS THE ONE YOU'RE PLACING IT IN
                 var lastpieceinsamelayer;
                 for (var b = 0; b < res; b++) {
-                    if (test.arr[b].layer.length == layer.length) {
-                        lastpieceinsamelayer = test.arr[b];
+                    if (blocks[b].layer.length == layer.length) {
+                        lastpieceinsamelayer = blocks[b];
                     }
                 }
                 //set top based on that
@@ -277,8 +277,8 @@ function snapB() {
             //get the top posititon by adding up all pieces above it
             for (var d = 0; d < res; d++) {
                 //loop height already includes the height of the stuff within bc it stretches to include them
-                if (!test.arr[d].inloop)
-                    top += test.arr[d].height;
+                if (!blocks[d].inloop)
+                    top += blocks[d].height;
             }
             //default left pos
             left = -200;
@@ -308,14 +308,14 @@ function snapB() {
             }
             top += blockhei;
         }
-        for (var g = res + dragbit.length; g < test.arr.length; g++) {
-            if (!test.arr[g].inloop && dragbit.length < 2 && test.arr[g - 1].inloop && test.arr[searchBlockArrayForDiv(test.arr, test.arr[g - 1].loopid)].bref.length < 2) {
-                var shiftoffset = blockhei - (test.arr[searchBlockArrayForDiv(test.arr, test.arr[g - 1].loopid)].toppos + test.arr[searchBlockArrayForDiv(test.arr, test.arr[g - 1].loopid)].height - test.arr[g].toppos);
+        for (var g = res + dragbit.length; g < blocks.length; g++) {
+            if (!blocks[g].inloop && dragbit.length < 2 && blocks[g - 1].inloop && blocks[searchBlockArrayForDiv(blocks, blocks[g - 1].loopid)].bref.length < 2) {
+                var shiftoffset = blockhei - (blocks[searchBlockArrayForDiv(blocks, blocks[g - 1].loopid)].toppos + blocks[searchBlockArrayForDiv(blocks, blocks[g - 1].loopid)].height - blocks[g].toppos);
                 //console.log(shiftoffset);
                 shift -= shiftoffset;
             }
-            test.arr[g].toppos += shift;
-            test.arr[g].div.style.top = test.arr[g].toppos + "px";
+            blocks[g].toppos += shift;
+            blocks[g].div.style.top = blocks[g].toppos + "px";
         }
     }
     // if it didn't land within the dropbox, DELETE IT FROM EXISTANCE
@@ -327,37 +327,37 @@ function snapB() {
 
 function doit(selected, index, top, left, inloop, loopid, bref, lay) {
     if (hasClass(selected, "move")) {
-        test.arr.splice(index, 0, new Piece(left, lay, top, new MoveFunct(), selected.id, selected, blockhei, inloop, loopid, bref, false));
+        blocks.splice(index, 0, new Piece(left, lay, top, new MoveFunct(), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "rotateleft")) {
-        test.arr.splice(index, 0, new Piece(left, lay, top, new RotateLeftFunct(), selected.id, selected, blockhei, inloop, loopid, bref, false));
+        blocks.splice(index, 0, new Piece(left, lay, top, new RotateLeftFunct(), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "rotateright")) {
-        test.arr.splice(index, 0, new Piece(left, lay, top, new RotateRightFunct(), selected.id, selected, blockhei, inloop, loopid, bref, false));
+        blocks.splice(index, 0, new Piece(left, lay, top, new RotateRightFunct(), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "cangof")) {
-        test.arr.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("forward"), selected.id, selected, blockhei, inloop, loopid, bref, false));
+        blocks.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("forward"), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "cangob")) {
-        test.arr.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("backward"), selected.id, selected, blockhei, inloop, loopid, bref, false));
+        blocks.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("backward"), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "cangol")) {
-        test.arr.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("left"), selected.id, selected, blockhei, inloop, loopid, bref, false));
+        blocks.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("left"), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "cangor")) {
-        test.arr.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("right"), selected.id, selected, blockhei, inloop, loopid, bref, false));
+        blocks.splice(index, 0, new Piece(left, lay, top, new CanMoveFunct("right"), selected.id, selected, blockhei, inloop, loopid, bref, false));
     } else if (hasClass(selected, "repeatf")) {
         var trect = selected.getBoundingClientRect();
-        test.arr.splice(index, 0, new Piece(left, lay, top, new RepeatForeverFunct(), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
+        blocks.splice(index, 0, new Piece(left, lay, top, new RepeatForeverFunct(), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
     } else if (hasClass(selected, "repeat")) {
         var second = selected.id.substring(2);
         var trect = selected.getBoundingClientRect();
-        test.arr.splice(index, 0, new Piece(left, lay, top, new RepeatFunct("tp" + second), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
+        blocks.splice(index, 0, new Piece(left, lay, top, new RepeatFunct("tp" + second), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
     } else if (hasClass(selected, "if")) {
         var second = selected.id.substring(2);
         var trect = selected.getBoundingClientRect();
-        test.arr.splice(index, 0, new Piece(left, lay, top, new IfFunct("id" + second), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
+        blocks.splice(index, 0, new Piece(left, lay, top, new IfFunct("id" + second), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
     } else if (hasClass(selected, "elseif")) {
         var second = selected.id.substring(2);
         var trect = selected.getBoundingClientRect();
-        test.arr.splice(index, 0, new Piece(left, lay, top, new ElseIfFunct("ed" + second), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
+        blocks.splice(index, 0, new Piece(left, lay, top, new ElseIfFunct("ed" + second), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
     } else if (hasClass(selected, "else")) {
         var trect = selected.getBoundingClientRect();
-        test.arr.splice(index, 0, new Piece(left, lay, top, new ElseFunct(), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
+        blocks.splice(index, 0, new Piece(left, lay, top, new ElseFunct(), selected.id, selected, trect.bottom - trect.top, inloop, loopid, bref, true));
     }
     if (!hasClass(selected, "used"))
         addClass(selected, "used");

@@ -1,6 +1,6 @@
 // //to do
 
-// - check that ifs and elses are in the right place when they hit run
+// work on interface, check block snapping because it glitches sometimes
 
 var CounterObj = function(count) {
     this.count = count;
@@ -16,10 +16,6 @@ var hangingifendpoint = -1;
 var longtime = true;
 var speed = 500;
 var problemlist = [];
-
-var Blocks = function() {
-    this.arr = [];
-}
 
 var Piece = function(l, layer, t, f, divid, div, height, inloop, loopid, bref, outer) {
     this.div = div;
@@ -69,7 +65,7 @@ var ElseIfFunct = function(inputid) {
 }
 
 
-var test = new Blocks();
+var blocks = [];
 
 function searchBlockArrayForDiv(arr, divname) {
     for (var i = 0; i < arr.length; i++) {
@@ -82,15 +78,15 @@ function searchBlockArrayForDiv(arr, divname) {
 
 var act = function(tid, p) {
     if (p.funct.type === "movefunct") {
-    	longtime = true;
+        longtime = true;
         bot.move();
     }
     if (p.funct.type === "rotateleftfunct") {
-    	longtime = true;
+        longtime = true;
         bot.rotateLeft();
     }
     if (p.funct.type === "rotaterightfunct") {
-    	longtime = true;
+        longtime = true;
         bot.rotateRight();
     }
     // if (p.funct.type === "canmovefunct") {
@@ -98,22 +94,22 @@ var act = function(tid, p) {
     //         alert("good to go!");
     // }
     if (p.funct.type === "repeatforeverfunct" && p.bref.length > 0) {
-    	longtime = false;
+        longtime = false;
         loop = true;
-        endpoint = searchBlockArrayForDiv(test.arr, p.bref[0]);
-        startpoint = searchBlockArrayForDiv(test.arr, p.bref[0]);
+        endpoint = searchBlockArrayForDiv(blocks, p.bref[0]);
+        startpoint = searchBlockArrayForDiv(blocks, p.bref[0]);
         for (var i = 0; i < p.bref.length; i++) {
-            if (searchBlockArrayForDiv(test.arr, p.bref[i]) > endpoint) {
-                endpoint = searchBlockArrayForDiv(test.arr, p.bref[i]);
+            if (searchBlockArrayForDiv(blocks, p.bref[i]) > endpoint) {
+                endpoint = searchBlockArrayForDiv(blocks, p.bref[i]);
             }
-            if (searchBlockArrayForDiv(test.arr, p.bref[i]) < startpoint) {
-                startpoint = searchBlockArrayForDiv(test.arr, p.bref[i]);
+            if (searchBlockArrayForDiv(blocks, p.bref[i]) < startpoint) {
+                startpoint = searchBlockArrayForDiv(blocks, p.bref[i]);
             }
         }
         counter.count = startpoint - 1;
     }
     if (p.funct.type === "repeatfunct") {
-    	longtime = false;
+        longtime = false;
         loop = true;
         times = parseInt(document.getElementById(p.funct.inputid).value, 10);
         if (!(times > 0)) {
@@ -122,24 +118,24 @@ var act = function(tid, p) {
             return;
         }
         timecounter = 1;
-        endpoint = searchBlockArrayForDiv(test.arr, p.bref[0]);
-        startpoint = searchBlockArrayForDiv(test.arr, p.bref[0]);
+        endpoint = searchBlockArrayForDiv(blocks, p.bref[0]);
+        startpoint = searchBlockArrayForDiv(blocks, p.bref[0]);
         for (var i = 0; i < p.bref.length; i++) {
-            if (searchBlockArrayForDiv(test.arr, p.bref[i]) > endpoint) {
-                endpoint = searchBlockArrayForDiv(test.arr, p.bref[i]);
+            if (searchBlockArrayForDiv(blocks, p.bref[i]) > endpoint) {
+                endpoint = searchBlockArrayForDiv(blocks, p.bref[i]);
             }
-            if (searchBlockArrayForDiv(test.arr, p.bref[i]) < startpoint) {
-                startpoint = searchBlockArrayForDiv(test.arr, p.bref[i]);
+            if (searchBlockArrayForDiv(blocks, p.bref[i]) < startpoint) {
+                startpoint = searchBlockArrayForDiv(blocks, p.bref[i]);
             }
         }
         counter.count = startpoint - 1;
     }
     if (p.funct.type === "iffunct") {
-    	longtime = false;
-        var end = searchBlockArrayForDiv(test.arr, p.bref[0]);
+        longtime = false;
+        var end = searchBlockArrayForDiv(blocks, p.bref[0]);
         for (var i = 0; i < p.bref.length; i++) {
-            if (searchBlockArrayForDiv(test.arr, p.bref[i]) > end) {
-                end = searchBlockArrayForDiv(test.arr, p.bref[i]);
+            if (searchBlockArrayForDiv(blocks, p.bref[i]) > end) {
+                end = searchBlockArrayForDiv(blocks, p.bref[i]);
             }
         }
         var ddl = document.querySelector(".ifmenu");
@@ -148,18 +144,17 @@ var act = function(tid, p) {
             counter.count = end;
             hangingif = true;
             hangingifendpoint = end;
-        }
-        else{
-        	resetIfs();
+        } else {
+            resetIfs();
         }
     }
     if (p.funct.type === "elsefunct") {
-    	longtime = false;
+        longtime = false;
         if (!(hangingif)) {
-            var end = searchBlockArrayForDiv(test.arr, p.bref[0]);
+            var end = searchBlockArrayForDiv(blocks, p.bref[0]);
             for (var i = 0; i < p.bref.length; i++) {
-                if (searchBlockArrayForDiv(test.arr, p.bref[i]) > end) {
-                    end = searchBlockArrayForDiv(test.arr, p.bref[i]);
+                if (searchBlockArrayForDiv(blocks, p.bref[i]) > end) {
+                    end = searchBlockArrayForDiv(blocks, p.bref[i]);
                 }
             }
             counter.count = end;
@@ -168,40 +163,41 @@ var act = function(tid, p) {
     }
 
     if (p.funct.type === "elseiffunct") {
-    	longtime = false;
-    	var end = searchBlockArrayForDiv(test.arr, p.bref[0]);
-            for (var i = 0; i < p.bref.length; i++) {
-                if (searchBlockArrayForDiv(test.arr, p.bref[i]) > end) {
-                    end = searchBlockArrayForDiv(test.arr, p.bref[i]);
-                }
+        longtime = false;
+        var end = searchBlockArrayForDiv(blocks, p.bref[0]);
+        for (var i = 0; i < p.bref.length; i++) {
+            if (searchBlockArrayForDiv(blocks, p.bref[i]) > end) {
+                end = searchBlockArrayForDiv(blocks, p.bref[i]);
             }
-
-    	var ddl = document.querySelector(".elsemenu");
+        }
+        var tempnum = p.divid.substring(2);
+        var ddl = document.querySelector("#ed" + tempnum);
+        console.log(tempnum, ddl);
         var selectedValue = ddl.options[ddl.selectedIndex].value;
-        if (!(hangingif)||!bot.canmove(selectedValue, true)) {
+        console.log(ddl, selectedValue);
+        if (!(hangingif) || !bot.canmove(selectedValue, true)) {
             counter.count = end;
             hangingifendpoint = end + 1;
-        }
-        else if (bot.canmove(selectedValue, true)){
-        	resetIfs();
+        } else if (bot.canmove(selectedValue, true)) {
+            resetIfs();
         }
     }
 }
 
-function resetIfs(){
-		hangingifendpoint = -1;
-        hangingif = false;
+function resetIfs() {
+    hangingifendpoint = -1;
+    hangingif = false;
 }
 
 function compileActions() {
-	 var problemlist = checker();
+    var problemlist = checker();
     var finallist = "";
-    if(problemlist.length > 0){
-    	for(var b = 0; b < problemlist.length; b++){
-    		finallist += problemlist[b] + "   //   ";
-    	}
-    	alert(finallist);
-    	return;
+    if (problemlist.length > 0) {
+        for (var b = 0; b < problemlist.length; b++) {
+            finallist += problemlist[b] + "   //   ";
+        }
+        alert(finallist);
+        return;
     }
 
     times = 500;
@@ -209,11 +205,11 @@ function compileActions() {
     endscript = false;
     counter.count = 0;
     startpoint = 0;
-    //console.log(test.arr);
-    endpoint = test.arr.length - 1;
+    //console.log(blocks);
+    endpoint = blocks.length - 1;
     var tid = setTimeout(mycode, 200);
 
-    
+
 
     function mycode() {
         // if(hangingifendpoint != counter.count){
@@ -222,26 +218,25 @@ function compileActions() {
         if (counter.count > endpoint || endscript) {
             clearTimeout(tid);
         } else if (counter.count <= endpoint) {
-        	console.log(counter.count);
-            act(tid, test.arr[counter.count]);
+            console.log(counter.count);
+            act(tid, blocks[counter.count]);
             counter.count++;
 
             if (timecounter >= times) {
-                times = 500; 
+                times = 500;
                 loop = false;
-                endpoint = test.arr.length - 1;
+                endpoint = blocks.length - 1;
             }
             if (loop && counter.count > endpoint) {
                 counter.count = startpoint;
                 timecounter++;
             }
-            if(longtime){
-            	tid = setTimeout(mycode, speed);
+            if (longtime) {
+                tid = setTimeout(mycode, speed);
+            } else {
+                tid = setTimeout(mycode, 0);
             }
-            else{
-            	tid = setTimeout(mycode, 0);
-            }
-            
+
         }
 
     }
@@ -254,44 +249,55 @@ function stopActions() {
 }
 
 
-function checker(){
-	var waitingif = false;
-	problemlist = [];
+function checker() {
+    var waitingif = false;
+    problemlist = [];
 
-	for(var i = 0; i < test.arr.length; i++){
-		var pie = test.arr[i];
-		if(pie.outer && pie.bref.length < 1){
-			var problem = "Empty loop or if/else statement at block # " + (i+1); 
-			problemlist.push(problem);
-		}
-		if (pie.funct.type === "repeatfunct") {
-        var checktimes = parseInt(document.getElementById(pie.funct.inputid).value, 10);
-        if (!(checktimes > 0)) {
-            var problem = "No value entered for the repeat loop at block # " + (i+1); 
-			problemlist.push(problem);
+    for (var i = 0; i < blocks.length; i++) {
+        var pie = blocks[i];
+        if (pie.outer && pie.bref.length < 1) {
+            var problem = "Empty loop or if/else statement at block # " + (i + 1);
+            problemlist.push(problem);
         }
-	}}
-	for(var i = 0; i < test.arr.length; i++){
-		var pie = test.arr[i];
-
-		if(!waitingif && (pie.funct.type === "elsefunct" || pie.funct === "elseiffunct")){
-			var problem = "Else statement at block # " + (i+1) + " should be directly below if statement"; 
-			problemlist.push(problem);
-		}
-		if(pie.funct.type === "iffunct" || pie.funct.type === "elseiffunct"){
-			waitingif = true;
-			}
-        else{
-        	waitingif = false;
-        }
-        if(pie.outer && pie.bref.length > 0){
-        	i = searchBlockArrayForDiv(test.arr, pie.bref[0]);
-        	for (var j = 0; j < pie.bref.length; j++) {
-            if (searchBlockArrayForDiv(test.arr, pie.bref[j]) > i) {
-                i = searchBlockArrayForDiv(test.arr, pie.bref[j]);
+        if (pie.funct.type === "repeatfunct") {
+            var checktimes = parseInt(document.getElementById(pie.funct.inputid).value, 10);
+            if (!(checktimes > 0)) {
+                var problem = "No value entered for the repeat loop at block # " + (i + 1);
+                problemlist.push(problem);
             }
         }
+    }
+    var max = 0;
+    for (var i = 0; i < blocks.length; i++) {
+        if (blocks[i].layer.length > max) {
+            max = blocks[i].layer.length;
         }
-		}
-	return problemlist;
+    }
+    console.log(max);
+    for (var j = 0; j <= max; j++) {
+        for (var i = 0; i < blocks.length; i++) {
+        	var pie = blocks[i];
+            if (pie.layer.length == j) {
+                if (!waitingif && (pie.funct.type === "elsefunct" || pie.funct.type === "elseiffunct")) {
+                    var problem = "Else statement at block # " + (i + 1) + " should be directly below if statement";
+                    problemlist.push(problem);
+                }
+                if (pie.funct.type === "iffunct" || pie.funct.type === "elseiffunct") {
+                    waitingif = true;
+                } else {
+                    waitingif = false;
+                }
+                if ((pie.funct.type === "elsefunct" || pie.funct === "elseiffunct" || pie.funct === "iffunct") && pie.bref.length > 0) {
+                    i = searchBlockArrayForDiv(blocks, pie.bref[0]);
+                    for (var h = 0; h < pie.bref.length; h++) {
+                        if (searchBlockArrayForDiv(blocks, pie.bref[h]) > i) {
+                            i = searchBlockArrayForDiv(blocks, pie.bref[h]);
+                        }
+                    }
+                }
+            }
+        }
+        waitingif = false;
+    }
+    return problemlist;
 }

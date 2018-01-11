@@ -282,6 +282,10 @@ user-select: none;
         position: absolute;
         bottom: 5px;
         right: 5px;
+        font-size: 0.70em;
+        padding: 5px;
+        line-height: 1.25em;
+        color: rgb(255, 100, 100);
     }
 
     </style>
@@ -361,8 +365,9 @@ user-select: none;
             <div>else</div></div>
             <div class="inner-middle"></div>
             <div class="inner-bottom"></div></div>
+                        <div class="warnings">Note: Don't resize the grid after putting down blocks, there's a bug that causes it to not terminate when it should if the grid is resized AFTER the blocks are put down. Reload to restart.</div>
     </div>
-    <div class="warnings">Note: Don't resize the grid after putting down blocks, there's a bug that I will fix (but haven't yet) that causes it to not terminate when it should if the grid is resized AFTER the blocks are put down. Reload to restart.</div>
+    
     <script src="grid.js"></script>
     <script src="blocks.js"></script>
     <script src="gui.js"></script>
